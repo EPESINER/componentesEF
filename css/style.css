@@ -90,10 +90,26 @@ header.site-nav{position:sticky;top:0;z-index:50;}
 .nav-burger span{display:block;width:100%;height:2px;border-radius:2px;transition:transform .2s,opacity .2s;}
 .nav-check{display:none;}
 
+/* Ícone de busca no cabeçalho (Etapa 4 — Fase 1). Fica ao lado do
+   burger, fora do .nav-menu, para continuar acessível mesmo com o
+   menu mobile recolhido — mesma lógica de agrupamento que já existia
+   entre .nav-brand e .nav-menu, só que com mais um item no grupo da
+   direita. */
+.nav-right{display:flex;align-items:center;gap:8px;}
+.nav-search-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:none;background:none;cursor:pointer;color:var(--green-900);flex-shrink:0;padding:0;}
+.nav-search-btn svg{width:18px;height:18px;stroke:currentColor;pointer-events:none;}
+.nav-search-btn:hover{background:var(--green-50);}
+
 @media(max-width:900px){
   .nav-inner{flex-wrap:wrap;padding:0 16px;}
   .nav-brand{padding:7px 0;}
   .nav-brand .brand-mark img{height:38px;}
+  /* Desfaz o agrupamento em telas estreitas: .nav-search-btn, .nav-burger
+     e .nav-menu voltam a ser filhos diretos do cabeçalho, exatamente como
+     antes desta seção existir — para .nav-menu (width:100% neste ponto de
+     quebra) continuar quebrando linha do jeito que já funcionava. */
+  .nav-right{display:contents;}
+  .nav-search-btn{margin-left:auto;}
   .nav-burger{display:flex;}
   .nav-menu{display:none;width:100%;flex-direction:column;padding-bottom:12px;gap:0;}
   .nav-check:checked ~ .site-nav .nav-menu{display:flex;}
@@ -392,6 +408,98 @@ table.disc td.ch{text-align:right;font-family:var(--font-mono);color:var(--green
 .rule-list li{padding-left:26px;position:relative;font-size:14.5px;color:var(--ink-muted);line-height:1.6;}
 .rule-list li::before{content:"—";position:absolute;left:0;color:var(--gold-600);}
 
+/* ---------- Conheça a Gestão ---------- */
+
+/* Abertura própria da seção: faixa escura com colagem fotográfica discreta
+   ao fundo (opacidade baixa + gradiente), título e apresentação. Segue o
+   mesmo padrão de seção "cheia" (full-bleed) já usado em #inicio (.hero). */
+.gestao-hero{position:relative;padding:56px 0 46px;color:var(--white);overflow:hidden;background:var(--green-900);}
+.gestao-hero-collage{position:absolute;inset:0;display:flex;opacity:.28;}
+.gestao-hero-collage img{flex:1;min-width:0;height:100%;object-fit:cover;display:block;filter:grayscale(15%);}
+.gestao-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,80,47,.38),rgba(6,38,23,.94));}
+.gestao-hero-inner{position:relative;max-width:760px;}
+.gestao-hero .crumb{color:#cfe3d3;margin-bottom:20px;}
+.gestao-hero .crumb a{color:#eef7ef;}
+.gestao-hero .kicker{color:var(--gold-400);margin:0 0 12px;}
+.gestao-hero-title{font-family:var(--font-display);text-transform:uppercase;font-size:clamp(28px,4vw,42px);margin:0 0 16px;line-height:1.12;color:var(--white);}
+.gestao-hero-inner p.gestao-hero-lede{font-size:15.5px;line-height:1.7;color:#dfeee0;max-width:620px;margin:0;}
+
+.gestao-body{padding:48px 0 4px;}
+
+.gestao-section{margin-bottom:52px;}
+.gestao-section:last-child{margin-bottom:0;}
+.gestao-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+.gestao-section-head h3{font-family:var(--font-display);text-transform:uppercase;color:var(--green-900);font-size:20px;margin:0;letter-spacing:.005em;}
+.gestao-section-count{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-faint);text-transform:uppercase;}
+
+/* Mosaico fotográfico: a foto é o próprio cartão, com nome e cargo em
+   legenda sobre a imagem. Coordenação Geral usa proporção mais alta
+   (3:4) para ganhar destaque visual; as demais diretorias usam 1:1 no
+   desktop. --cols é definido por integrante via JS (nº de integrantes da
+   diretoria, até 4) para preencher a largura disponível sem sobrar
+   espaço vazio quando uma diretoria tem menos integrantes. */
+.gestao-tile{position:relative;border-radius:var(--radius-md);overflow:hidden;cursor:pointer;display:block;font:inherit;color:inherit;text-align:left;padding:0;border:0;background:var(--paper-alt);width:100%;transition:transform .15s ease;}
+.gestao-tile img{width:100%;height:100%;object-fit:cover;display:block;}
+.gestao-tile .gestao-cap{position:absolute;left:0;right:0;bottom:0;padding:16px 16px 14px;background:linear-gradient(180deg,rgba(7,50,30,0) 0%,rgba(6,38,23,.86) 72%);}
+.gestao-tile .gestao-cap h4{color:var(--white);font-family:var(--font-display);text-transform:uppercase;font-size:16px;margin:0 0 2px;text-shadow:0 1px 4px rgba(0,0,0,.3);}
+.gestao-tile .gestao-cap p{color:#e7f2e5;font-size:12.5px;margin:0;}
+.gestao-tile:hover{transform:translateY(-2px);}
+.gestao-tile:hover .gestao-cap{background:linear-gradient(180deg,rgba(7,50,30,0) 0%,rgba(6,38,23,.94) 68%);}
+.gestao-tile:focus-visible{outline:3px solid var(--gold-500);outline-offset:2px;}
+
+.gestao-coord-grid{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:16px;}
+.gestao-coord-grid .gestao-tile{aspect-ratio:3/4;}
+.gestao-coord-grid .gestao-cap h4{font-size:18px;}
+
+.gestao-grid{display:grid;grid-template-columns:repeat(var(--cols,4),1fr);gap:14px;}
+.gestao-grid .gestao-tile{aspect-ratio:1/1;}
+
+/* Atribuições estatutárias da diretoria: discretas e expansíveis, depois
+   dos integrantes, sem competir visualmente com as fotografias. */
+.gestao-atribuicoes{border-top:1px dashed var(--line);padding-top:8px;margin-top:18px;}
+.gestao-atribuicoes summary{cursor:pointer;font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--green-700);list-style:none;padding:6px 0;display:flex;align-items:center;gap:6px;}
+.gestao-atribuicoes summary::-webkit-details-marker{display:none;}
+.gestao-atribuicoes summary::before{content:"+";color:var(--gold-600);}
+.gestao-atribuicoes[open] summary::before{content:"–";}
+.gestao-atribuicoes summary:focus-visible{outline:2px solid var(--green-700);outline-offset:2px;border-radius:4px;}
+.gestao-atribuicoes p{margin:6px 0 0;font-size:13px;color:var(--ink-muted);line-height:1.65;max-width:560px;}
+.gestao-atribuicoes .gestao-artigo{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--ink-faint);display:block;margin-top:8px;}
+
+.gestao-detail-photo{width:100%;aspect-ratio:1/1;border-radius:var(--radius-md);overflow:hidden;margin-bottom:18px;background:var(--paper-alt);}
+.gestao-detail-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.gestao-detail-area{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--green-700);margin:0 0 4px;}
+.gestao-detail-note{margin-top:14px;font-size:12.5px;color:var(--ink-faint);line-height:1.6;}
+
+@media(max-width:900px){
+  .gestao-hero-collage img:nth-child(odd){display:none;}
+}
+
+@media(max-width:760px){
+  .gestao-hero{padding:44px 0 36px;}
+  .gestao-body{padding:40px 0 4px;}
+  .gestao-section{margin-bottom:42px;}
+  .gestao-coord-grid,.gestao-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  /* Evita cartão isolado sobrando à direita quando a diretoria tem um
+     número ímpar de integrantes (ex.: 3 em duas colunas): o último
+     cartão fica centralizado, do mesmo tamanho dos demais. */
+  .gestao-coord-grid .gestao-tile:last-child:nth-child(odd),
+  .gestao-grid .gestao-tile:last-child:nth-child(odd){grid-column:1 / -1;max-width:calc(50% - 6px);margin:0 auto;}
+}
+
+@media(max-width:480px){
+  .gestao-hero-collage img:nth-child(4n){display:none;}
+}
+
+@media(max-width:640px){
+  /* Prioriza legibilidade de nomes/cargos e enquadramento dos rostos:
+     cartões mais altos (em vez de quadrados) em duas colunas. */
+  .gestao-coord-grid .gestao-tile,.gestao-grid .gestao-tile{aspect-ratio:4/5;}
+  .gestao-tile .gestao-cap{padding:14px 12px 11px;}
+  .gestao-tile .gestao-cap h4{font-size:15.5px;}
+  .gestao-tile .gestao-cap p{font-size:12px;}
+  .gestao-hero-inner p.gestao-hero-lede{font-size:14.5px;}
+}
+
 /* ---------- Apadrinhamento phases ---------- */
 .phase-track{display:flex;flex-direction:column;gap:0;}
 .phase-row{display:grid;grid-template-columns:52px 1fr;gap:18px;position:relative;}
@@ -465,6 +573,14 @@ details.lap.search-all-hidden{display:none;}
 .search-result-item:hover{background:var(--green-50);}
 .search-result-name{font-size:14px;font-weight:600;color:var(--ink);}
 .search-result-context{font-family:var(--font-mono);font-size:11.5px;color:var(--green-600);}
+/* Busca no portal (Etapa 4 — Fase 1): os resultados agora são <a>, que
+   por padrão sublinham todo o texto do card. Restrinja isso ao painel
+   #siteSearchPanel para não alterar a Busca Global (Ensino), que usa
+   as mesmas classes .search-result-item/.search-result-name em
+   <button>s dentro de #searchResults. Só o título deve parecer um
+   link; categoria e descrição continuam legíveis, sem sublinhado. */
+#siteSearchPanel .search-result-item{text-decoration:none;}
+#siteSearchPanel .search-result-name{text-decoration:underline;}
 .search-results-more{padding:10px 14px;font-size:12.5px;color:var(--ink-muted);font-style:italic;}
 
 /* ---------- Sub tabs (Ensino/Pesquisa hub) ---------- */
@@ -737,6 +853,7 @@ footer.site-footer{background:#062e22;}
   .nav-burger{width:40px;height:40px;gap:5px;}
   .nav-burger span{background:var(--green-900);height:2.5px;}
   .nav-check:checked ~ .site-nav .nav-burger span{background:#fff;}
+  .nav-search-btn{width:40px;height:40px;}
   main section{padding:44px 0;}
   .crumb{margin-bottom:22px;}
   .section-head{margin-bottom:26px;}

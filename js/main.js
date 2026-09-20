@@ -508,6 +508,19 @@
       activateTab('radar', {silent:true});
       openDetail(linkedId);
     }
+
+    /* Exposição controlada para a Busca Geral (Etapa 4 — Fase 2): expõe
+       só a lista já autorizada (ALL, nunca o array bruto OPORTUNIDADES)
+       e uma função de abertura que ativa a aba do Radar e abre o
+       mesmo painel de detalhe usado pelos cartões do Radar — a busca
+       nunca reimplementa o filtro de autorização nem monta o painel
+       por conta própria. */
+    window.caefOportunidadesAutorizadas = ALL;
+    window.caefOpenOportunidade = function(id){
+      if (!ALL.some(function(o){ return o.id === id; })) return;
+      activateTab('radar', {silent:true});
+      openDetail(id);
+    };
   }
 
   /* ---------------------------------------------------------------
@@ -541,7 +554,7 @@
       formWrap.innerHTML = FORMACAO.map(function(f){
         var badge = f.status === 'confirmada' ? 'CONFIRMADA' : (f.status === 'encerrada' ? 'ENCERRADA' : 'EM BREVE');
         var badgeClass = f.status === 'confirmada' ? 'confirmada' : '';
-        return '<div class="formation-card">'+
+        return '<div class="formation-card" id="form-'+f.id+'">'+
           '<span class="formation-badge '+badgeClass+'">'+badge+'</span>'+
           '<div style="flex:1;">'+
             '<div class="kicker" style="margin-bottom:4px;">'+f.formato+'</div>'+
@@ -558,6 +571,81 @@
         '</div>';
       }).join('');
     }
+    /* Exposição controlada para a Busca Geral (Etapa 4 — Fase 2): só a
+       lista SEM atividades "encerradas" — elas continuam aparecendo
+       normalmente aqui na seção Formação (nada nesta filtragem muda o
+       que "formWrap" mostra), mas não devem aparecer como resultado
+       de busca. O status e os dados cadastrados não são alterados,
+       só a lista extra usada pela busca deixa de fora quem já
+       encerrou. */
+    window.caefFormacaoBusca = FORMACAO.filter(function(f){ return f.status !== 'encerrada'; });
+  }
+
+  /* ---------------------------------------------------------------
+     MURAL DE AVISOS
+     --------------------------------------------------------------- */
+  var muralWrap = document.getElementById('muralWrap');
+  if (muralWrap && typeof AVISOS !== 'undefined'){
+    function escapeAvisoHtml(str){
+      if (str === undefined || str === null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    function parseDataBR(str){
+      if (!str) return null;
+      var partes = str.split('/');
+      if (partes.length !== 3) return null;
+      var d = new Date(partes[2], partes[1]-1, partes[0]);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    var hojeMural = new Date();
+    var avisosPublicados = AVISOS.filter(function(a){
+      if (a.situacaoPublicacao !== 'publicado') return false;
+      var validade = parseDataBR(a.validoAte);
+      if (validade){
+        validade.setHours(23,59,59,999);
+        if (hojeMural > validade) return false;
+      }
+      return true;
+    });
+    if (!avisosPublicados.length){
+      muralWrap.innerHTML = '<div class="empty-state"><h4>Nenhum aviso publicado no momento</h4><p>Novos comunicados da Diretoria Geral do CAEF aparecem aqui assim que forem avaliados e aprovados para publicação.</p></div>';
+    } else {
+      muralWrap.innerHTML = avisosPublicados.map(function(a){
+        return '<div class="formation-card" id="aviso-'+escapeAvisoHtml(a.id)+'">'+
+          '<span class="formation-badge">AVISO</span>'+
+          '<div style="flex:1;">'+
+            '<div class="kicker" style="margin-bottom:4px;">'+escapeAvisoHtml(a.origem)+'</div>'+
+            '<h3 style="font-family:var(--font-display);text-transform:uppercase;color:var(--green-900);margin:0 0 8px;font-size:19px;">'+escapeAvisoHtml(a.titulo)+'</h3>'+
+            '<p style="margin:0;color:var(--ink-muted);font-size:14.5px;line-height:1.6;">'+escapeAvisoHtml(a.texto)+'</p>'+
+            '<dl class="formation-fields">'+
+              '<div><dt>Comunicado em</dt><dd>'+escapeAvisoHtml(a.dataOriginal||'—')+'</dd></div>'+
+            '</dl>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+    }
+    /* Sinalização apenas para manutenção (console do navegador) — nunca
+       exibida ao público — quando um aviso publicado passa da própria
+       data de revisão editorial sem confirmação. */
+    AVISOS.forEach(function(a){
+      if (a.situacaoPublicacao !== 'publicado') return;
+      var revisao = parseDataBR(a.revisaoEditorial);
+      if (revisao && hojeMural > revisao){
+        console.warn('[Mural de Avisos] O aviso "'+a.titulo+'" passou da data de revisão editorial ('+a.revisaoEditorial+'). Confirme com a Diretoria Geral do CAEF se a orientação ainda está vigente antes de manter, atualizar ou arquivar o comunicado.');
+      }
+    });
+    /* Exposição controlada para a Busca Geral (Etapa 4 — Fase 2): a
+       busca lê exatamente esta lista, já filtrada por situação de
+       publicação e validade — nunca reimplementa essa regra por
+       conta própria. Se este arquivo não carregar por algum motivo,
+       a busca simplesmente não mostra avisos (ver "typeof" no módulo
+       de busca), em vez de quebrar. */
+    window.caefAvisosPublicados = avisosPublicados;
   }
 
   /* ---------------------------------------------------------------
@@ -646,6 +734,164 @@
     }, 60);
   });
 
+})();
+
+/* ---------------------------------------------------------------
+   CONHEÇA A GESTÃO — cartões por diretoria + painel de detalhe
+   ---------------------------------------------------------------
+   Lê GESTAO_DIRETORIAS e GESTAO_INTEGRANTES (js/data/gestao.js).
+   Cada cartão é um <button>, acionável por mouse, toque e teclado.
+   O painel de detalhe reaproveita a mesma técnica de foco acessível
+   já usada no painel da Busca Geral (Fase 2): fundo marcado como
+   inert, Tab preso dentro do painel, Esc fecha, foco volta para o
+   cartão que abriu. Bloco independente — replica a lógica em vez de
+   compartilhar closure, seguindo o padrão já usado neste arquivo. */
+(function(){
+  'use strict';
+  var wrap = document.getElementById('gestaoWrap');
+  if (!wrap || typeof GESTAO_INTEGRANTES === 'undefined' || typeof GESTAO_DIRETORIAS === 'undefined') return;
+
+  function escapeGestaoHtml(str){
+    if (str === undefined || str === null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  var porDiretoria = {};
+  GESTAO_INTEGRANTES.forEach(function(m){
+    if (!porDiretoria[m.diretoriaId]) porDiretoria[m.diretoriaId] = [];
+    porDiretoria[m.diretoriaId].push(m);
+  });
+
+  // Colagem fotográfica discreta no banner de abertura — gerada a partir
+  // dos mesmos dados, para nunca ficar dessincronizada da lista real de
+  // integrantes (adicionar/remover alguém em gestao.js já atualiza tudo).
+  var heroCollage = document.getElementById('gestaoHeroCollage');
+  if (heroCollage){
+    heroCollage.innerHTML = GESTAO_INTEGRANTES.map(function(m){
+      return '<img src="assets/img/gestao/'+escapeGestaoHtml(m.foto)+'" alt="" style="object-position:'+escapeGestaoHtml(m.fotoPosicao||'center')+';" loading="lazy">';
+    }).join('');
+  }
+
+  // Mosaico fotográfico por diretoria: cada integrante é um cartão-foto
+  // (a foto é o próprio cartão, com nome e cargo em legenda sobre a
+  // imagem). Coordenação Geral ganha destaque visual com cartões mais
+  // altos (3:4) em sua própria composição; as demais diretorias usam
+  // cartões quadrados no desktop. --cols é calculado por diretoria (até
+  // 4) para que os cartões preencham a largura disponível sem deixar
+  // espaço vazio quando há menos de 4 integrantes.
+  wrap.innerHTML = GESTAO_DIRETORIAS.map(function(d){
+    var membros = porDiretoria[d.id] || [];
+    if (!membros.length) return '';
+    var isCoord = d.id === 'organizacao';
+    var gridClass = isCoord ? 'gestao-coord-grid' : 'gestao-grid';
+    var cols = Math.min(membros.length, 4);
+    var tiles = membros.map(function(m){
+      return '<button type="button" class="gestao-tile" data-gestao-id="'+escapeGestaoHtml(m.id)+'">'+
+        '<img src="assets/img/gestao/'+escapeGestaoHtml(m.foto)+'" alt="" style="object-position:'+escapeGestaoHtml(m.fotoPosicao||'center')+';" loading="lazy">'+
+        '<span class="gestao-cap"><h4>'+escapeGestaoHtml(m.nome)+'</h4><p>'+escapeGestaoHtml(m.funcao)+'</p></span>'+
+      '</button>';
+    }).join('');
+    return '<div class="gestao-section">'+
+      '<div class="gestao-section-head"><h3>'+escapeGestaoHtml(d.nome)+'</h3><span class="gestao-section-count">'+membros.length+(membros.length===1?' integrante':' integrantes')+'</span></div>'+
+      '<div class="'+gridClass+'" style="--cols:'+cols+';">'+tiles+'</div>'+
+      '<details class="gestao-atribuicoes"><summary>Ver atribuições da diretoria</summary><p>'+escapeGestaoHtml(d.resumoEstatuto)+'</p><span class="gestao-artigo">'+escapeGestaoHtml(d.artigo)+'</span></details>'+
+    '</div>';
+  }).join('');
+
+  var overlay = document.getElementById('gestaoOverlay');
+  var panel = document.getElementById('gestaoPanel');
+  var closeBtn = document.getElementById('gestaoPanelClose');
+  var bodyEl = document.getElementById('gestaoPanelBody');
+  var titleEl = document.getElementById('gestaoPanelTitle');
+  if (!overlay || !panel || !closeBtn || !bodyEl) return;
+
+  var lastFocused = null;
+  var inertedEls = [];
+  var cardButtons = wrap.querySelectorAll('.gestao-tile');
+
+  function isToggle(el){ return Array.prototype.indexOf.call(cardButtons, el) !== -1; }
+  function containsToggle(el){
+    for (var i = 0; i < cardButtons.length; i++){ if (el.contains(cardButtons[i])) return true; }
+    return false;
+  }
+  function setBackgroundInert(on){
+    if (on){
+      inertedEls = [];
+      (function walk(nodeList){
+        Array.prototype.forEach.call(nodeList, function(el){
+          if (el === overlay || el === panel) return;
+          if (isToggle(el)) return;
+          if (containsToggle(el)){ walk(el.children); return; }
+          if (el.hasAttribute('inert')) return;
+          el.setAttribute('inert', '');
+          inertedEls.push(el);
+        });
+      })(document.body.children);
+    } else {
+      inertedEls.forEach(function(el){ el.removeAttribute('inert'); });
+      inertedEls = [];
+    }
+  }
+  function getFocusable(){
+    return Array.prototype.filter.call(
+      panel.querySelectorAll('a,button,input,[tabindex]:not([tabindex="-1"])'),
+      function(el){ return !el.hidden && el.offsetParent !== null; }
+    );
+  }
+
+  function openMember(id){
+    var m = GESTAO_INTEGRANTES.filter(function(x){ return x.id === id; })[0];
+    if (!m) return;
+    titleEl.textContent = m.nome;
+    bodyEl.innerHTML =
+      '<div class="gestao-detail-photo"><img src="assets/img/gestao/'+escapeGestaoHtml(m.foto)+'" alt="" style="object-position:'+escapeGestaoHtml(m.fotoPosicao||'center')+';"></div>'+
+      '<p class="gestao-detail-area">'+escapeGestaoHtml(m.area)+'</p>'+
+      '<h2 style="margin:0 0 4px;">'+escapeGestaoHtml(m.nome)+'</h2>'+
+      '<p style="margin:0;color:var(--ink-muted);font-size:14.5px;">'+escapeGestaoHtml(m.funcao)+'</p>'+
+      '<p class="gestao-detail-note">O CAEF é uma iniciativa estudantil do curso de Educação Física — não é um canal oficial da UFPB.</p>';
+    lastFocused = document.activeElement;
+    overlay.classList.add('open');
+    panel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setBackgroundInert(true);
+    setTimeout(function(){ closeBtn.focus(); }, 10);
+  }
+
+  function closeMember(){
+    if (!panel.classList.contains('open')) return;
+    overlay.classList.remove('open');
+    panel.classList.remove('open');
+    document.body.style.overflow = '';
+    setBackgroundInert(false);
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    lastFocused = null;
+  }
+
+  wrap.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.gestao-tile') : null;
+    if (!btn) return;
+    openMember(btn.getAttribute('data-gestao-id'));
+  });
+  overlay.addEventListener('click', closeMember);
+  closeBtn.addEventListener('click', closeMember);
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && panel.classList.contains('open')) closeMember();
+  });
+
+  panel.addEventListener('keydown', function(e){
+    if (e.key !== 'Tab') return;
+    var focusable = getFocusable();
+    if (!focusable.length) return;
+    var first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  });
 })();
 
 /* ---------------------------------------------------------------
@@ -794,5 +1040,532 @@
     e.preventDefault();if(typeof window.caefActivateTab==='function')window.caefActivateTab('inicio');
     history.replaceState(null,'','#sobre-portal');
     var hub=document.getElementById('sobre-portal');if(hub)hub.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  });
+})();
+
+/* ---------------------------------------------------------------
+   BUSCA NO PORTAL — Fase 1 (seções do portal + canais do CAEF) e
+   Fase 2 (avisos, oportunidades, atividades de formação e trilhas)
+   ---------------------------------------------------------------
+   Fase 1: lê o índice pronto em js/data/busca-secoes.js
+   (BUSCA_SECOES). Para adicionar/editar/remover uma seção ou canal
+   da busca, edite apenas esse arquivo.
+
+   Fase 2: NÃO cadastra avisos, oportunidades ou atividades de novo.
+   Lê, uma vez, quando a página carrega, os mesmos dados que já
+   alimentam o Mural, o Radar e a Formação (ver "Índice pré-
+   normalizado" mais abaixo):
+     - Avisos: window.caefAvisosPublicados — a mesmíssima lista já
+       filtrada por situação de publicação e validade que o Mural usa
+       para se renderizar (exposta no bloco MURAL DE AVISOS).
+     - Oportunidades: window.caefOportunidadesAutorizadas — a lista já
+       filtrada por autorização de divulgação que o Radar usa (exposta
+       no bloco RADAR CAEF), mais window.caefOpenOportunidade(id), a
+       função que abre o mesmo painel de detalhe do Radar.
+     - Atividades de formação: window.caefFormacaoBusca — a lista da
+       Formação MENOS as atividades "encerradas" (elas continuam
+       aparecendo normalmente na própria seção Formação; só não
+       aparecem como resultado de busca).
+   Trilhas (cartões temáticos de Trilhas de saúde e Trilhas CCHLA) não
+   têm arquivo de dados próprio — o índice é montado lendo direto os
+   cartões ".trail-card" já publicados em index.html.
+
+   Cada uma dessas fontes é lida através de "window.caefXxx" (nunca
+   por variável compartilhada entre arquivos) porque este arquivo é
+   dividido em vários blocos independentes — não um único módulo — e
+   é a ordem em que eles aparecem no HTML que garante que Radar, Mural
+   e Formação já rodaram e já expuseram seus dados antes deste bloco,
+   que é sempre o último. Se uma dessas fontes não existir por algum
+   motivo, a função correspondente devolve uma lista vazia — a busca
+   nunca quebra por causa de um tipo de conteúdo indisponível, só
+   deixa de mostrar aquele tipo.
+   --------------------------------------------------------------- */
+(function(){
+  'use strict';
+  var toggles = document.querySelectorAll('.nav-search-btn');
+  var overlay = document.getElementById('siteSearchOverlay');
+  var panel = document.getElementById('siteSearchPanel');
+  var closeBtn = document.getElementById('siteSearchClose');
+  var input = document.getElementById('siteSearchInput');
+  var clearBtn = document.getElementById('siteSearchClear');
+  var countEl = document.getElementById('siteSearchCount');
+  var hintEl = document.getElementById('siteSearchHint');
+  var resultsEl = document.getElementById('siteSearchResults');
+  var emptyEl = document.getElementById('siteSearchEmpty');
+  if (!toggles.length || !overlay || !panel || !closeBtn || !input || !resultsEl || !emptyEl) return;
+  if (typeof BUSCA_SECOES === 'undefined') return;
+
+  var lastFocused = null;
+  var inertedEls = [];
+
+  /* Foco e navegação assistiva enquanto o painel está aberto:
+     - isToggle/containsToggle identificam o(s) botão(ões) que abrem/
+       fecham a busca, para NUNCA torná-los inacessíveis.
+     - setBackgroundInert aplica o atributo nativo "inert" a todo o
+       conteúdo de fundo (menu, conteúdo das abas, rodapé etc.), o que
+       remove esses elementos da árvore de acessibilidade e do foco
+       sequencial enquanto o painel estiver aberto — não só do Tab,
+       mas também da navegação por cursor virtual de leitores de tela.
+       Containers que contêm o próprio botão de busca não são
+       tornados inert; a função entra neles e trata os outros filhos,
+       preservando o botão 100% utilizável para fechar o painel.
+
+       Importante: um elemento pode já estar inert por outro motivo
+       antes mesmo de a busca ser aberta (outro recurso do portal, por
+       exemplo). Por isso, só marcamos como "nosso" (para desfazer ao
+       fechar) um elemento que NÃO estava inert antes — inertedEls
+       guarda só esses. Um elemento que já estava inert antes é
+       deixado como está, tanto ao abrir quanto ao fechar, para nunca
+       reativar por engano algo que já estava indisponível. */
+  function isToggle(el){
+    return Array.prototype.indexOf.call(toggles, el) !== -1;
+  }
+  function containsToggle(el){
+    for (var i = 0; i < toggles.length; i++){
+      if (el.contains(toggles[i])) return true;
+    }
+    return false;
+  }
+  function setBackgroundInert(on){
+    if (on){
+      inertedEls = [];
+      (function walk(nodeList){
+        Array.prototype.forEach.call(nodeList, function(el){
+          if (el === overlay || el === panel) return;
+          if (isToggle(el)) return;
+          if (containsToggle(el)){ walk(el.children); return; }
+          if (el.hasAttribute('inert')) return;
+          el.setAttribute('inert', '');
+          inertedEls.push(el);
+        });
+      })(document.body.children);
+    } else {
+      inertedEls.forEach(function(el){ el.removeAttribute('inert'); });
+      inertedEls = [];
+    }
+  }
+
+  /* Move o foco para o destino depois de uma navegação interna pela
+     busca (em vez de deixar o foco preso no botão do cabeçalho).
+     tabindex="-1" torna o elemento focável via script sem incluí-lo na
+     ordem de tabulação normal — mesma técnica usada em apps de página
+     única para mover o foco após uma navegação "sem recarregar".
+
+     opts.scroll (Fase 2): quando o destino é um item específico
+     DENTRO de uma seção (um aviso, uma atividade de formação, um
+     cartão de trilha) — e não a seção inteira — o topo da seção não
+     é o mesmo lugar que o item; por isso, além do foco, rola até ele
+     e aplica por um instante o mesmo destaque (.search-jump) que a
+     Busca do Ensino já usa para "achar" uma disciplina. Sem essa
+     opção, o comportamento é EXATAMENTE o da Fase 1 (sem rolar, sem
+     destacar) — usado quando o destino já é o topo da seção. */
+  function focusDestino(id, opts){
+    var alvo = document.getElementById(id);
+    if (!alvo) return;
+    if (!alvo.hasAttribute('tabindex')) alvo.setAttribute('tabindex', '-1');
+    alvo.focus({ preventScroll: true });
+    if (opts && opts.scroll){
+      var reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      alvo.scrollIntoView({behavior: reduzMovimento ? 'auto' : 'smooth', block: 'center'});
+      alvo.classList.remove('search-jump');
+      void alvo.offsetWidth;
+      alvo.classList.add('search-jump');
+    }
+  }
+
+  /* Ignora acentuação e maiúsculas/minúsculas, para "formacao" achar
+     "Formação" e vice-versa — sem depender de bibliotecas externas. */
+  function normalize(str){
+    return String(str || '')
+      .toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  /* Quebra um texto normalizado em palavras. Comparar por palavra (e não
+     por trecho solto) evita falsos positivos como "formacao" encontrar
+     "informação" só porque uma string contém a outra no meio. */
+  function palavras(strNorm){
+    return strNorm.split(/[^a-z0-9]+/).filter(Boolean);
+  }
+
+  /* Cada palavra digitada precisa ser o INÍCIO de alguma palavra do
+     texto indexado — assim "apadrin" ainda encontra "apadrinhamento"
+     (prefixo real), mas "formacao" não encontra "informação". */
+  function correspondePorPrefixo(palavrasTexto, palavrasTermo){
+    return palavrasTermo.every(function(pt){
+      return palavrasTexto.some(function(w){ return w.indexOf(pt) === 0; });
+    });
+  }
+
+  /* Corta um texto para caber no mesmo espaço visual que os resumos
+     das seções (Fase 1) já ocupam, sem cortar no meio de uma palavra.
+     Só encurta o que é MOSTRADO — a correspondência da busca (mais
+     abaixo) sempre usa o texto completo, nunca o cortado. */
+  function truncar(str, max){
+    str = String(str || '');
+    if (str.length <= max) return str;
+    return str.slice(0, max).replace(/\s+\S*$/, '') + '…';
+  }
+
+  /* Seções e canais (Fase 1) — formato original de BUSCA_SECOES,
+     só "traduzido" para o formato comum que todas as fontes da busca
+     passam a usar a partir da Fase 2 (kindKey/contexto). Nada no
+     conteúdo de js/data/busca-secoes.js muda. */
+  function normalizarItemSecao(item){
+    var externo = item.tipo === 'externa';
+    return {
+      kindKey: externo ? 'canal' : 'secao',
+      titulo: item.titulo,
+      resumo: item.resumo,
+      termos: item.termos || [],
+      contexto: externo ? 'Canal do CAEF' : 'Seção do portal',
+      tipo: item.tipo,
+      destino: item.destino
+    };
+  }
+
+  /* Avisos do Mural (Fase 2) — lê window.caefAvisosPublicados, a
+     mesma lista já filtrada por situação de publicação e validade
+     que o próprio Mural usa. Nunca refaz esse filtro aqui. */
+  function itensDeAvisos(){
+    var lista = window.caefAvisosPublicados;
+    if (!lista || !lista.length) return [];
+    return lista.map(function(a){
+      return {
+        kindKey: 'aviso',
+        titulo: a.titulo,
+        resumo: a.texto,
+        termos: [a.origem || ''],
+        contexto: 'Aviso',
+        tipo: 'interna',
+        destino: '#mural',
+        focusId: 'aviso-' + a.id
+      };
+    });
+  }
+
+  /* Oportunidades do Radar (Fase 2) — lê
+     window.caefOportunidadesAutorizadas, a mesma lista já filtrada
+     por autorização de divulgação que o próprio Radar usa. O rótulo
+     mostrado sempre inclui o estado real (Com vagas / Consultar
+     disponibilidade / Seleção encerrada) — nunca um texto genérico
+     que possa sugerir vaga confirmada quando não é o caso. */
+  function itensDeOportunidades(){
+    var lista = window.caefOportunidadesAutorizadas;
+    if (!lista || !lista.length) return [];
+    var TYPE_LABEL = {extensao:'Extensão', pesquisa:'Pesquisa/Laboratório', monitoria:'Monitoria', evento:'Evento'};
+    var AVAIL_LABEL = {vagas:'Com vagas', consultar:'Consultar disponibilidade', encerrado:'Seleção encerrada'};
+    return lista.map(function(o){
+      var tipoLabel = TYPE_LABEL[o.type] || o.type || 'Oportunidade';
+      var availLabel = (o.status && AVAIL_LABEL[o.status.availability]) || 'Consultar disponibilidade';
+      return {
+        kindKey: 'oportunidade',
+        titulo: o.shortTitle || o.title,
+        resumo: o.description || '',
+        termos: [o.area || '', o.coordinator || ''],
+        contexto: tipoLabel + ' · ' + availLabel,
+        tipo: 'interna',
+        oportunidadeId: o.id
+      };
+    });
+  }
+
+  /* Atividades do CAEF Formação (Fase 2) — lê window.caefFormacaoBusca
+     (a lista da Formação já sem "encerradas"; ver o bloco CAEF
+     FORMAÇÃO). O rótulo sempre mostra a situação real (Planejada ou
+     Confirmada), nunca um texto genérico. */
+  function itensDeFormacao(){
+    var lista = window.caefFormacaoBusca;
+    if (!lista || !lista.length) return [];
+    return lista.map(function(f){
+      var situacao = f.status === 'confirmada' ? 'Confirmada' : 'Planejada';
+      return {
+        kindKey: 'formacao',
+        titulo: f.titulo,
+        resumo: f.descricao || '',
+        termos: [f.formato || ''],
+        contexto: 'Atividade de formação · ' + situacao,
+        tipo: 'interna',
+        destino: '#formacao',
+        focusId: 'form-' + f.id
+      };
+    });
+  }
+
+  /* Cartões temáticos das Trilhas de saúde e Trilhas CCHLA (Fase 2) —
+     sem arquivo de dados próprio: lê direto os cartões ".trail-card"
+     já publicados em index.html (cada um já tem id próprio). Os
+     nomes das disciplinas de cada cartão viram "termos", para que
+     buscar por uma disciplina (ex.: "fisioterapia") encontre o
+     cartão que a contém — a navegação chega até o cartão, não até a
+     disciplina individual dentro dele (fica para uma rodada futura).
+     Aprovado nesta fase só o nível de cartão temático. */
+  function itensDeTrilhas(){
+    var cards = document.querySelectorAll('.trail-card[id]');
+    if (!cards.length) return [];
+    return Array.prototype.map.call(cards, function(card){
+      var secao = card.closest('section[id]');
+      var secaoId = secao ? secao.id : 'trilhas';
+      var tituloEl = card.querySelector('.trail-head h3');
+      var titulo = tituloEl ? tituloEl.textContent.trim() : '';
+      var nomes = Array.prototype.map.call(card.querySelectorAll('.d-name'), function(n){ return n.textContent.trim(); });
+      return {
+        kindKey: 'trilha',
+        titulo: titulo,
+        resumo: nomes.length ? ('Inclui: ' + nomes.join(', ')) : '',
+        termos: nomes,
+        contexto: secaoId === 'trilhas-cchla' ? 'Trilha CCHLA' : 'Trilha de disciplinas de saúde',
+        tipo: 'interna',
+        destino: '#' + secaoId,
+        focusId: card.id
+      };
+    });
+  }
+
+  /* Índice pré-normalizado uma única vez, quando a página carrega (a
+     lista de destinos é pequena; não há necessidade de recalcular
+     isso a cada tecla). Como este bloco é sempre o último a rodar no
+     arquivo (ver o comentário no topo deste módulo), Mural, Radar e
+     Formação já terminaram de expor seus dados antes desta linha
+     rodar — junta tudo numa lista só, sem cadastro duplicado em
+     nenhum lugar. */
+  var todosItens = BUSCA_SECOES.map(normalizarItemSecao)
+    .concat(itensDeAvisos())
+    .concat(itensDeOportunidades())
+    .concat(itensDeFormacao())
+    .concat(itensDeTrilhas());
+  var INDEX = todosItens.map(function(item){
+    return {
+      item: item,
+      tituloPalavras: palavras(normalize(item.titulo)),
+      termosPalavras: palavras(normalize((item.termos || []).join(' '))),
+      resumoPalavras: palavras(normalize(item.resumo))
+    };
+  });
+
+  /* Relevância: título > termos relacionados > resumo. Cada destino
+     entra no máximo uma vez, na melhor posição que ele alcançar —
+     nunca duplicado, mesmo que combine em mais de um campo. */
+  function buscar(query){
+    var termoPalavras = palavras(normalize(query));
+    if (!termoPalavras.length) return [];
+    var achados = [];
+    INDEX.forEach(function(entry){
+      var tier = -1;
+      if (correspondePorPrefixo(entry.tituloPalavras, termoPalavras)) tier = 0;
+      else if (correspondePorPrefixo(entry.termosPalavras, termoPalavras)) tier = 1;
+      else if (correspondePorPrefixo(entry.resumoPalavras, termoPalavras)) tier = 2;
+      if (tier !== -1) achados.push({ item: entry.item, tier: tier });
+    });
+    achados.sort(function(a, b){ return a.tier - b.tier; });
+    return achados.map(function(a){ return a.item; });
+  }
+
+  function buildResultItem(item){
+    var externo = item.tipo === 'externa';
+    var a = document.createElement('a');
+    a.className = 'search-result-item';
+    if (item.kindKey === 'oportunidade'){
+      /* Sem seção/âncora própria: o destino real é abrir o painel de
+         detalhe da oportunidade. O href continua funcional (mesmo
+         endereço que o botão "Compartilhar" do Radar já gera), para
+         abrir em nova aba/janela funcionar normalmente — mas o clique
+         normal é interceptado (ver o ouvinte de clique mais abaixo)
+         para abrir o painel na hora, sem recarregar a página. */
+      a.href = '?oportunidade=' + encodeURIComponent(item.oportunidadeId) + '#radar';
+      a.dataset.kind = 'oportunidade';
+      a.dataset.oportunidadeId = item.oportunidadeId;
+    } else {
+      a.href = item.destino;
+      if (item.focusId) a.dataset.focusId = item.focusId;
+    }
+    if (externo){ a.target = '_blank'; a.rel = 'noopener'; }
+
+    var nome = document.createElement('span');
+    nome.className = 'search-result-name';
+    nome.textContent = item.titulo + (externo ? ' ↗' : '');
+
+    var contexto = document.createElement('span');
+    contexto.className = 'search-result-context';
+    contexto.textContent = item.contexto;
+
+    var resumo = document.createElement('span');
+    resumo.style.cssText = 'display:block;font-size:12.5px;color:var(--ink-muted);line-height:1.4;margin-top:2px;';
+    resumo.textContent = truncar(item.resumo, 150);
+
+    a.appendChild(nome); a.appendChild(contexto); a.appendChild(resumo);
+    return a;
+  }
+
+  function renderResults(query){
+    var termo = query.trim();
+    resultsEl.replaceChildren();
+
+    if (!termo){
+      hintEl.hidden = false;
+      emptyEl.hidden = true;
+      resultsEl.hidden = true; resultsEl.classList.remove('show');
+      countEl.textContent = '';
+      return;
+    }
+    hintEl.hidden = true;
+
+    var achados = buscar(termo);
+    if (!achados.length){
+      emptyEl.hidden = false;
+      resultsEl.hidden = true; resultsEl.classList.remove('show');
+      countEl.textContent = '';
+      return;
+    }
+    emptyEl.hidden = true;
+    countEl.textContent = achados.length + (achados.length === 1 ? ' resultado encontrado' : ' resultados encontrados');
+    achados.forEach(function(item){ resultsEl.appendChild(buildResultItem(item)); });
+    resultsEl.hidden = false; resultsEl.classList.add('show');
+  }
+
+  function getFocusable(){
+    return Array.prototype.filter.call(
+      panel.querySelectorAll('a,button,input,[tabindex]:not([tabindex="-1"])'),
+      function(el){ return !el.hidden && el.offsetParent !== null; }
+    );
+  }
+
+  function openPanel(){
+    lastFocused = document.activeElement;
+    overlay.classList.add('open');
+    panel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    toggles.forEach(function(b){ b.setAttribute('aria-expanded', 'true'); });
+    setBackgroundInert(true);
+    input.value = '';
+    clearBtn.hidden = true;
+    renderResults('');
+    /* pequeno atraso para não roubar o foco antes do navegador
+       terminar de processar o clique/tecla que abriu o painel */
+    setTimeout(function(){ input.focus(); }, 10);
+  }
+
+  /* opts.returnFocus === false: usado quando a busca vai entregar o
+     foco a outro lugar (a seção de destino de um resultado interno)
+     em vez de devolvê-lo ao botão do cabeçalho. Em todos os outros
+     casos (Esc, clique fora, botão fechar, resultado externo) o foco
+     volta para onde estava antes de abrir o painel, como antes. */
+  function closePanel(opts){
+    if (!panel.classList.contains('open')) return;
+    var returnFocus = !opts || opts.returnFocus !== false;
+    overlay.classList.remove('open');
+    panel.classList.remove('open');
+    document.body.style.overflow = '';
+    toggles.forEach(function(b){ b.setAttribute('aria-expanded', 'false'); });
+    setBackgroundInert(false);
+    if (returnFocus && lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    lastFocused = null;
+  }
+
+  toggles.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if (panel.classList.contains('open')) closePanel();
+      else openPanel();
+    });
+  });
+  /* Chamadas sem argumento (não repassar o evento de clique como
+     "opts") para sempre cair no comportamento padrão: devolver o
+     foco para onde estava antes de abrir o painel. */
+  closeBtn.addEventListener('click', function(){ closePanel(); });
+  overlay.addEventListener('click', function(){ closePanel(); });
+
+  input.addEventListener('input', function(){
+    clearBtn.hidden = (input.value === '');
+    renderResults(input.value);
+  });
+  clearBtn.addEventListener('click', function(){
+    input.value = ''; clearBtn.hidden = true; renderResults(''); input.focus();
+  });
+
+  /* Clicar (ou ativar por Enter) num resultado fecha o painel; a
+     navegação em si é feita pelo próprio link — reaproveitando o
+     roteador de abas já existente (activateTab) para seções internas,
+     e o comportamento nativo do navegador para "#creditos" e para os
+     canais externos (target="_blank"). Nada aqui reimplementa isso.
+
+     Oportunidade do Radar (Fase 2): é o único caso sem uma âncora
+     própria — o destino real é abrir o mesmo painel de detalhe do
+     Radar. Por isso o clique padrão é interceptado (preventDefault) e
+     a busca fecha ANTES de chamar window.caefOpenOportunidade — nessa
+     ordem, o fundo já deixou de estar inert e o painel de busca já
+     está fechado quando o painel do Radar abre por cima (é exatamente
+     o que evita o painel de busca "preso" aberto ou o conteúdo da
+     página marcado como inert por engano).
+
+     Foco após a navegação: para um resultado interno com seção
+     própria (seção do portal, aviso, atividade de formação, trilha),
+     o foco não volta para o botão de busca — ele segue para o próprio
+     destino (focusDestino): a seção inteira, quando é o caso da Fase
+     1, ou o item específico dentro dela (com rolagem e destaque),
+     quando é um aviso/atividade/cartão de trilha da Fase 2. Isso só
+     pode acontecer depois que o roteador de abas (ouvinte de clique
+     global, em document) já tiver ativado a seção — por isso o
+     pequeno atraso. Para um resultado externo (canal do CAEF), como o
+     documento atual não navega para lugar nenhum, o foco continua
+     voltando ao botão de busca, como antes. Para a oportunidade do
+     Radar, o foco vai para o botão de fechar do painel de detalhe que
+     acabou de abrir. */
+  resultsEl.addEventListener('click', function(e){
+    var link = e.target.closest('a.search-result-item');
+    if (!link) return;
+
+    if (link.dataset.kind === 'oportunidade'){
+      e.preventDefault();
+      var oportunidadeId = link.dataset.oportunidadeId;
+      closePanel({ returnFocus: false });
+      if (typeof window.caefOpenOportunidade === 'function'){
+        window.caefOpenOportunidade(oportunidadeId);
+        var fecharDetalheRadar = document.getElementById('detailClose');
+        if (fecharDetalheRadar) fecharDetalheRadar.focus({ preventScroll: true });
+      }
+      return;
+    }
+
+    var externo = link.target === '_blank';
+    if (externo){
+      closePanel();
+      return;
+    }
+    var destino = link.getAttribute('href') || '';
+    var destinoId = destino.charAt(0) === '#' ? destino.slice(1) : '';
+    var focusId = link.dataset.focusId || destinoId;
+    var comRolagem = !!link.dataset.focusId;
+    closePanel({ returnFocus: false });
+    if (focusId){
+      setTimeout(function(){ focusDestino(focusId, { scroll: comRolagem }); }, 20);
+    }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+  });
+
+  panel.addEventListener('keydown', function(e){
+    if (e.key === 'Tab'){
+      var focusable = getFocusable();
+      if (!focusable.length) return;
+      var first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      return;
+    }
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    var items = Array.prototype.slice.call(resultsEl.querySelectorAll('.search-result-item'));
+    if (!items.length) return;
+    var idx = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown'){
+      e.preventDefault();
+      if (idx === -1){ items[0].focus(); }
+      else if (idx < items.length - 1){ items[idx + 1].focus(); }
+    } else {
+      e.preventDefault();
+      if (idx === -1 || idx === 0){ input.focus(); }
+      else { items[idx - 1].focus(); }
+    }
   });
 })();

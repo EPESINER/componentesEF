@@ -56,5 +56,5 @@ const APADRINHAMENTO_ELEGIBILIDADE = "Veteranos regularmente matriculados a part
 
 const APADRINHAMENTO_SOS = {
   nome: "SOS Padrinho",
-  descricao: "Canal de apoio gerenciado pela Diretoria de Acolhimento do CAEF: se houver falta de contato ou problemas de convivência na dupla, o fera pode reportar por formulário ou pelo WhatsApp exclusivo disponível no Kit do Fera."
+  descricao: "Se houver falta de contato com o padrinho ou a madrinha, ou dificuldades de convivência durante o programa, entre em contato com Luiz Felipe, Coordenador de Ensino, Pesquisa e Extensão do CAEF, responsável pelo acompanhamento do Apadrinhamento Acadêmico."
 };
