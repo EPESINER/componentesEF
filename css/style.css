@@ -961,19 +961,15 @@ footer.site-footer{background:#062e22;}
 .start-guide-intro h2{font-family:var(--font-body,inherit);font-size:clamp(30px,3.5vw,49px);line-height:1.07;letter-spacing:-.035em;color:var(--green-950,#123b29);margin:12px 0 18px;font-weight:800;}
 .start-guide-intro>p:last-child{font-size:16px;line-height:1.6;color:var(--ink-muted,#52635b);max-width:32ch;}
 .start-guide-question{font-size:17px;font-weight:750;color:var(--green-950,#123b29);margin:0 0 16px;}
-.start-guide-choice,.start-guide-option{font:inherit;text-align:left;cursor:pointer;}
-.start-guide-choice{display:flex;align-items:center;gap:16px;width:100%;padding:20px;border:2px solid var(--green-600,#2e8852);border-radius:16px;background:#f2faf2;color:var(--green-950,#123b29);transition:transform .18s ease,box-shadow .18s ease,background .18s ease;}
-.start-guide-choice:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(17,91,55,.12);background:#eaf7e9;}
-.start-guide-choice-icon{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:50%;background:var(--green-700,#236d43);color:white;font-size:22px;}
-.start-guide-choice strong,.start-guide-choice small{display:block;}.start-guide-choice strong{font-size:16px;line-height:1.3;}.start-guide-choice small{font-size:13px;font-weight:400;line-height:1.45;margin-top:4px;}.start-guide-choice-arrow{font-size:23px;margin-left:auto;}
+.start-guide-option{font:inherit;text-align:left;cursor:pointer;}
 .start-guide-hint{font-size:13px;line-height:1.5;margin:14px 0 0;color:var(--ink-muted,#52635b);}.start-guide-hint a{color:var(--green-700,#236d43);font-weight:700;text-underline-offset:3px;}
 .start-guide-step-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;}.start-guide-step-label{font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--green-700,#236d43);}.start-guide-back{border:0;background:transparent;color:var(--green-700,#236d43);font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:8px;}
 .start-guide-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}.start-guide-option{border:1px solid var(--line,#d8e2d7);background:#fff;border-radius:12px;padding:15px;min-height:105px;color:var(--green-950,#123b29);transition:border-color .18s,background .18s,transform .18s;}.start-guide-option strong,.start-guide-option span{display:block;}.start-guide-option strong{font-size:15px;line-height:1.3;}.start-guide-option span{font-size:12.5px;line-height:1.45;color:var(--ink-muted,#52635b);margin-top:7px;}.start-guide-option:hover{border-color:var(--green-600,#2e8852);transform:translateY(-1px);}.start-guide-option[aria-pressed="true"]{border:2px solid var(--green-700,#236d43);background:#f0f8ee;padding:14px;}
 .start-guide-result{margin-top:16px;padding:20px;border-radius:14px;background:var(--green-950,#123b29);color:#fff;}.start-guide-result-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#d7e8db;margin:0 0 7px;}.start-guide-result h3{font-size:21px;color:white;margin:0 0 8px;}.start-guide-result>p:not(.start-guide-result-label){font-size:14px;line-height:1.55;color:#e3f0e7;margin:0 0 16px;}.start-guide-action{display:inline-flex;gap:20px;align-items:center;justify-content:space-between;background:#fff;color:var(--green-950,#123b29);font-weight:750;text-decoration:none;border-radius:9px;padding:11px 15px;min-height:44px;}.start-guide-action:hover{background:#e9f5e7;}
 .start-guide [hidden]{display:none !important;}.start-guide :is(button,a):focus-visible{outline:3px solid #b78500;outline-offset:3px;}
 @media(max-width:780px){.start-guide{padding:38px 0;}.start-guide-shell{grid-template-columns:1fr;gap:22px;}.start-guide-intro h2{margin:7px 0 10px;}.start-guide-intro>p:last-child{max-width:none;margin:0;}}
-@media(max-width:480px){.start-guide-shell{padding:22px 17px;border-radius:17px;}.start-guide-options{grid-template-columns:1fr;}.start-guide-option{min-height:auto;}.start-guide-choice{padding:15px;gap:10px;}.start-guide-choice-icon{flex-basis:35px;height:35px;}}
-@media(prefers-reduced-motion:reduce){.start-guide-choice,.start-guide-option{transition:none;}.start-guide-choice:hover,.start-guide-option:hover{transform:none;}}
+@media(max-width:480px){.start-guide-shell{padding:22px 17px;border-radius:17px;}.start-guide-options{grid-template-columns:1fr;}.start-guide-option{min-height:auto;}}
+@media(prefers-reduced-motion:reduce){.start-guide-option{transition:none;}.start-guide-option:hover{transform:none;}}
 
 /* V8: Radar, feedback e exploração */
 .radar-feedback{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
@@ -1073,3 +1069,74 @@ footer.site-footer{background:#062e22;}
 /* V12 · Apadrinhamento: acompanhamento e relatório final */
 .mentor-followup{margin-top:48px;padding:clamp(20px,4vw,42px);border:1px solid #d6e6d8;border-radius:22px;background:#f5faf5}.mentor-followup>h3{font-size:clamp(25px,3vw,36px);line-height:1.15;margin:10px 0}.mentor-followup>p{max-width:790px;line-height:1.7}.mentor-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:24px 0}.mentor-step{background:white;border:1px solid #dce9dd;border-radius:15px;padding:20px;display:flex;flex-direction:column;align-items:flex-start;gap:10px}.mentor-step h4{font-size:19px;margin:0}.mentor-step p{font-size:14px;line-height:1.6;margin:0;flex:1}.mentor-number{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#276a3e}.mentor-pending{font-size:12px;font-weight:700;color:#715b20;background:#fff5d8;padding:8px 10px;border-radius:8px;display:inline-block;text-decoration:none;cursor:not-allowed;border:1px dashed #e3c874}.mentor-note{background:#e4f0e6;border-left:4px solid #267742;padding:14px 17px;border-radius:7px;font-size:13px}.mentor-report{background:white;border:1px solid #dce9dd;border-radius:16px;padding:clamp(18px,3vw,30px);margin-top:28px;scroll-margin-top:24px}.mentor-report-heading{display:flex;justify-content:space-between;gap:15px;align-items:start}.mentor-report-heading h4{font-size:25px;margin:7px 0}.mentor-report-heading p{font-size:13px;line-height:1.6;max-width:610px}.mentor-pill{white-space:nowrap;background:#e9f4ec;color:#28623d;border-radius:30px;padding:8px 11px;font-size:11px;font-weight:800}.mentor-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:22px}.mentor-fields label{display:flex;flex-direction:column;gap:7px;font-weight:700;font-size:13px;color:#233b2b}.mentor-fields input,.mentor-fields select,.mentor-fields textarea{width:100%;border:1px solid #bacdbe;border-radius:9px;padding:12px;font:inherit;color:#172d1e;background:white;min-width:0}.mentor-fields textarea{resize:vertical;line-height:1.55}.mentor-fields :is(input,select,textarea):focus-visible{outline:3px solid #a5db9e;outline-offset:1px}.mentor-full{grid-column:1/-1}.mentor-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:22px}.mentor-actions span{font-size:12px;max-width:430px}.mentor-print-document{display:none}@media(max-width:760px){.mentor-steps,.mentor-fields{grid-template-columns:1fr}.mentor-report-heading{flex-direction:column}.mentor-pill{white-space:normal}}
 @media print{body:has(.mentor-print-document) > :not(.mentor-print-document){display:none!important}body:has(.mentor-print-document){background:white!important;color:#111!important;margin:0!important}.mentor-print-document{display:block!important;font-family:Arial,sans-serif;color:#111;font-size:11pt;line-height:1.45;max-width:100%;padding:0 4mm}.mentor-print-document header{border-bottom:2px solid #222;padding-bottom:10px;margin-bottom:20px}.mentor-print-document h1{font-size:15pt;margin:0 0 6px}.mentor-print-document h2{font-size:13pt;margin:0}.mentor-print-field{margin:0 0 14px;break-inside:avoid}.mentor-print-field strong{display:block;font-size:10pt}.mentor-print-field p{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 0}.mentor-print-date{margin-top:40px;font-size:10pt;break-inside:avoid}.mentor-signatures{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px;break-inside:avoid}.mentor-signatures div{border-top:1px solid #111;text-align:center;padding-top:7px;font-size:9pt}.mentor-print-footer{font-size:8pt;margin-top:26px;color:#333}@page{size:A4;margin:17mm}}
+
+/* ===================================================================
+   ETAPA 1 — reorganização da página inicial (aprovada)
+   Hero compacto no celular, orientador "Por onde começar?" com 4
+   caminhos, Central do Estudante sem numeração sequencial, separação
+   entre "Programas e ferramentas do CAEF" e "Avisos recentes".
+   =================================================================== */
+
+/* Hero compacto: mantém o conceito e a identidade visual da V18b,
+   reduzindo o respiro vertical em telas menores. */
+.hero.hero-compact .hero-inner{padding-top:64px;padding-bottom:56px;min-height:0;}
+@media(min-width:769px){
+  .hero.hero-compact{min-height:0;}
+  .hero.hero-compact .hero-inner{padding:68px 0 60px;}
+}
+@media(max-width:900px){
+  .hero.hero-compact .hero-inner{padding:46px 0 52px;min-height:0;}
+  .hero.hero-compact h1.hero-title{font-size:clamp(42px,11vw,64px);}
+}
+@media(max-width:560px){
+  /* Segunda rodada de compactação — só celular. O texto e os dois botões
+     do hero não mudam; o que muda é o respiro entre eles, para que "Por
+     onde começar?" apareça mais perto da primeira tela útil. */
+  .hero.hero-compact .hero-inner{padding:22px 0 26px;}
+  .hero.hero-compact h1.hero-title{font-size:clamp(38px,13vw,54px);margin-bottom:14px;}
+  .hero.hero-compact .hero-lede{margin-bottom:12px;font-size:15.5px;}
+  .hero.hero-compact .hero-eyebrow{margin-bottom:8px;}
+  .hero.hero-compact .hero-ctas{gap:10px;}
+}
+
+/* "Por onde começar?" — orientador de caminhos em grade compacta
+   (substitui o botão único "Acessar um serviço acadêmico"). */
+.start-guide-buckets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.start-guide-bucket{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;font:inherit;cursor:pointer;padding:16px;border:2px solid var(--line,#d8e2d7);border-radius:14px;background:#fff;color:var(--green-950,#123b29);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background .18s ease;}
+.start-guide-bucket:hover{border-color:var(--green-600,#2e8852);background:#f5faf3;transform:translateY(-2px);box-shadow:0 8px 18px rgba(17,91,55,.10);}
+.start-guide-bucket[aria-expanded="true"]{border-color:var(--green-700,#236d43);background:#f0f8ee;}
+.start-guide-bucket-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:50%;background:var(--green-700,#236d43);color:#fff;}
+.start-guide-bucket-icon svg{width:19px;height:19px;}
+.start-guide-bucket-label{font-size:15px;font-weight:750;line-height:1.3;}
+.start-guide-bucket-hint{font-size:12px;font-weight:400;line-height:1.4;color:var(--ink-muted,#52635b);}
+.start-guide-bucket:focus-visible{outline:3px solid #b78500;outline-offset:3px;}
+@media(max-width:480px){
+  .start-guide-buckets{gap:8px;}
+  .start-guide-bucket{padding:13px;}
+  .start-guide-bucket-hint{display:none;}
+}
+@media(prefers-reduced-motion:reduce){.start-guide-bucket{transition:none;}.start-guide-bucket:hover{transform:none;}}
+
+/* "Avisos recentes" — prévia dentro de "Acontecendo agora", lendo os
+   mesmos dados do Mural (window.caefAvisosPublicados), sem duplicar texto. */
+.now-avisos{margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.16);}
+.now-avisos-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+.now-avisos-head a{color:var(--gold-400);font-family:var(--font-mono);font-size:13px;text-decoration:none;}
+.now-aviso-card{display:block;padding:16px 18px;border:1px solid rgba(255,255,255,.18);border-radius:14px;background:rgba(255,255,255,.06);margin-bottom:10px;}
+.now-aviso-card:last-child{margin-bottom:0;}
+.now-aviso-card h4{margin:0 0 6px;font-size:15.5px;color:#fff;}
+.now-aviso-card p{margin:0 0 8px;font-size:13.5px;line-height:1.55;color:#C9D8CD;}
+.now-aviso-card .now-avisos-origem{font-size:12px;color:#9fb8a5;}
+.now-avisos-empty{font-size:13.5px;color:#C9D8CD;margin:0;}
+
+/* Correção de contraste: h2.section-title é global (color:var(--green-950)),
+   o que deixa o título quase invisível sobre o fundo escuro de .now-strip
+   (contraste medido: 1.32:1 — abaixo do mínimo de 3:1 do WCAG AA para
+   texto grande). Esse problema já existia na V18b real, no mesmo título
+   ("Acontecendo agora"); a correção abaixo resolve nos dois casos. */
+.now-strip h2.section-title{color:var(--white);}
+
+/* Acesso direto mais evidente no resultado do guia: botão de ação maior
+   e com destaque mais claro, mantendo a descrição visível antes dele. */
+.start-guide-action{padding:14px 18px;font-size:15.5px;gap:14px;}
+.start-guide-action:focus-visible{outline:3px solid var(--gold-500,#f2c500);outline-offset:3px;}

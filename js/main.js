@@ -1009,37 +1009,165 @@
 })();
 
 
-/* Guia "Por onde começar?". Não coleta dados e utiliza as rotas já existentes. */
+/* Guia "Por onde começar?" com 4 caminhos (Etapa 1). Não coleta dados;
+   usa somente destinos e textos reais do portal (as mesmas descrições já
+   usadas nos cartões da Central do Estudante). Não navega sozinho ao
+   selecionar uma opção: o foco vai para o botão de acesso, que precisa
+   ser confirmado (clique/Enter) para sair da página. */
 (function(){
   'use strict';
-  var start=document.getElementById('startGuideServices');
+  var buckets=document.querySelectorAll('.start-guide-bucket');
   var first=document.getElementById('startGuideStepOne');
   var second=document.getElementById('startGuideStepTwo');
   var back=document.getElementById('startGuideBack');
   var result=document.getElementById('startGuideResult');
-  if(!start||!first||!second||!back||!result)return;
-  var options=Array.prototype.slice.call(second.querySelectorAll('[data-service]'));
+  var optionsWrap=document.getElementById('startGuideOptions');
+  var stepLabel=document.getElementById('startGuideStepTwoLabel');
+  var question=document.getElementById('startGuideQuestion');
+  if(!buckets.length||!first||!second||!back||!result||!optionsWrap)return;
   var title=document.getElementById('startGuideResultTitle');
   var desc=document.getElementById('startGuideResultText');
   var link=document.getElementById('startGuideResultLink');
-  var services={
-    acervo:{title:'Acervo Acadêmico Digital',description:'Consulte as fontes de estudo e os materiais acadêmicos reunidos pelo CAEF.',href:'#acervo',action:'Ir para o Acervo'},
-    apadrinhamento:{title:'Apadrinhamento Acadêmico',description:'Conheça o programa de acolhimento e acompanhamento entre estudantes.',href:'#apadrinhamento',action:'Conhecer o programa'},
-    ouvidoria:{title:'Ouvidoria CAEF',description:'Acesse o canal para encaminhar uma dúvida, sugestão ou manifestação ao CAEF.',href:'#ouvidoria',action:'Ir para a Ouvidoria'},
-    central:{title:'Central de Serviços',description:'Veja os serviços e as demais áreas do portal na central de navegação.',href:'#sobre-portal',action:'Ver a central de navegação'}
+  /* Guarda o botão do caminho aberto no momento, para que "← Voltar"
+     devolva o foco a ele — e não ao primeiro caminho da lista. */
+  var currentBucket=null;
+
+  var DATA={
+    estudos:{
+      label:'Organizar meus estudos',
+      question:'Para onde você quer ir?',
+      items:[
+        {title:'Comparativo Bacharelado × Licenciatura',description:'Entenda as diferenças entre as duas habilitações antes de escolher seu caminho.',href:'#comparativo',action:'Comparar'},
+        {title:'Trilhas de disciplinas de saúde',description:'Disciplinas de outros cursos de saúde que podem contar como optativas.',href:'#trilhas',action:'Ver trilhas'},
+        {title:'Trilhas CCHLA',description:'Disciplinas de humanidades que podem contar como optativas, com foco na Licenciatura.',href:'#trilhas-cchla',action:'Ver trilhas'},
+        {title:'Descubra sua trilha',description:'Um quiz rápido para ver uma sugestão inicial de disciplinas conforme sua área de interesse.',href:'#quiz',action:'Fazer o quiz'},
+        {title:'Perfis de carreira',description:'Áreas de atuação da Educação Física e as disciplinas-chave para cada uma.',href:'#carreiras',action:'Ver perfis'}
+      ]
+    },
+    oportunidades:{
+      label:'Encontrar oportunidades',
+      question:'Que tipo de oportunidade você procura?',
+      items:[
+        {title:'Radar CAEF',description:'Vagas de extensão e de pesquisa em laboratórios do DEF, mapeadas com os responsáveis e reunidas num buscador com filtros.',href:'#radar',action:'Ver oportunidades'},
+        {title:'CAEF Portas Abertas',description:'Visitas guiadas para conhecer laboratórios, espaços acadêmicos e as pessoas que fazem pesquisa no curso.',href:'#portas-abertas',action:'Conhecer o programa'},
+        {title:'CAEF Formação',description:'Oficinas e minicursos para apoiar a vida acadêmica. A primeira edição será sobre Currículo Lattes.',href:'#formacao',action:'Ver programação'},
+        {title:'Pesquisa no DEF',description:'Laboratórios, grupos e linhas de pesquisa do DEF/UFPB, com a fonte de cada informação identificada.',href:'#pesquisa',action:'Ver pesquisa'},
+        {title:'Extensão no DEF',description:'Projetos de extensão do DEF/UFPB mapeados com os coordenadores responsáveis.',href:'#extensao',action:'Ver extensão'}
+      ]
+    },
+    apoio:{
+      label:'Buscar apoio ou serviços',
+      question:'Como podemos ajudar?',
+      items:[
+        {title:'Acervo Acadêmico',description:'Fontes gratuitas e legais de bibliografia, organizadas por período.',href:'#acervo',action:'Acessar acervo'},
+        {title:'Apadrinhamento Acadêmico',description:'Mentoria entre veteranos e calouros. A edição 2026.2 está em andamento.',href:'#apadrinhamento',action:'Saiba mais'},
+        {title:'Ouvidoria CAEF',description:'Canal direto com a Diretoria de Ensino, Pesquisa e Extensão do CAEF.',href:'#ouvidoria',action:'Ir para a Ouvidoria'}
+      ]
+    },
+    comunidade:{
+      label:'Conhecer o CAEF',
+      question:'O que você quer conhecer?',
+      items:[
+        {title:'CAEF Formação',description:'Oficinas e minicursos para apoiar a vida acadêmica. A primeira edição será sobre Currículo Lattes.',href:'#formacao',action:'Ver programação'},
+        {title:'Conheça a Gestão',description:'Integrantes da Gestão Sinergia, organizados pelas três diretorias do CAEF.',href:'#gestao',action:'Conhecer a gestão'}
+      ]
+    }
   };
-  start.addEventListener('click',function(){first.hidden=true;second.hidden=false;start.setAttribute('aria-expanded','true');options[0].focus();});
-  back.addEventListener('click',function(){second.hidden=true;first.hidden=false;result.hidden=true;start.setAttribute('aria-expanded','false');options.forEach(function(o){o.setAttribute('aria-pressed','false');});start.focus();});
-  options.forEach(function(option){option.addEventListener('click',function(){
-    var data=services[option.getAttribute('data-service')];if(!data)return;
-    options.forEach(function(o){o.setAttribute('aria-pressed',String(o===option));});
-    title.textContent=data.title;desc.textContent=data.description;link.href=data.href;link.firstChild.textContent=data.action+' ';result.hidden=false;
-  });});
-  /* #sobre-portal é uma seção dentro da Home; o roteador só troca painéis. */
-  link.addEventListener('click',function(e){if(link.getAttribute('href')!=='#sobre-portal')return;
-    e.preventDefault();if(typeof window.caefActivateTab==='function')window.caefActivateTab('inicio');
+
+  function goToSobrePortal(e,href){
+    if(href!=='#sobre-portal')return;
+    e.preventDefault();
+    if(typeof window.caefActivateTab==='function')window.caefActivateTab('inicio');
     history.replaceState(null,'','#sobre-portal');
-    var hub=document.getElementById('sobre-portal');if(hub)hub.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+    var hub=document.getElementById('sobre-portal');
+    if(hub)hub.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+  }
+
+  function resetBuckets(){buckets.forEach(function(b){b.setAttribute('aria-expanded','false');});}
+
+  function openBucket(bucketBtn){
+    var data=DATA[bucketBtn.getAttribute('data-bucket')];
+    if(!data)return;
+    resetBuckets();
+    bucketBtn.setAttribute('aria-expanded','true');
+    currentBucket=bucketBtn;
+    first.hidden=true;second.hidden=false;result.hidden=true;
+    if(stepLabel)stepLabel.textContent=data.label;
+    if(question)question.textContent=data.question;
+    optionsWrap.innerHTML='';
+    data.items.forEach(function(item){
+      var opt=document.createElement('button');
+      opt.type='button';opt.className='start-guide-option';opt.setAttribute('aria-pressed','false');
+      var strong=document.createElement('strong');strong.textContent=item.title;
+      var span=document.createElement('span');span.textContent=item.description;
+      opt.appendChild(strong);opt.appendChild(span);
+      opt.addEventListener('click',function(){
+        Array.prototype.forEach.call(optionsWrap.querySelectorAll('.start-guide-option'),function(o){o.setAttribute('aria-pressed',String(o===opt));});
+        title.textContent=item.title;desc.textContent=item.description;link.href=item.href;
+        if(link.firstChild)link.firstChild.textContent=item.action+' ';
+        result.hidden=false;
+        /* Acesso direto mais evidente: o resultado já mostra a descrição
+           (lida antes, no próprio cartão da opção); o foco vai direto para
+           o botão de acesso, para quem usa teclado, sem navegar sozinho —
+           é preciso confirmar (Enter/clique) para sair da página. */
+        result.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
+        link.focus();
+      });
+      optionsWrap.appendChild(opt);
+    });
+    var firstOption=optionsWrap.querySelector('.start-guide-option');
+    if(firstOption)firstOption.focus();
+  }
+
+  buckets.forEach(function(b){b.addEventListener('click',function(){openBucket(b);});});
+  back.addEventListener('click',function(){
+    second.hidden=true;first.hidden=false;result.hidden=true;
+    resetBuckets();
+    /* Foco volta exatamente para o caminho de origem (currentBucket);
+       o primeiro botão da lista só é usado como reserva, caso essa
+       referência não exista por algum motivo. */
+    var target=currentBucket||buckets[0];
+    if(target)target.focus();
+  });
+  /* #sobre-portal é uma seção dentro da Home; o roteador só troca painéis. */
+  link.addEventListener('click',function(e){goToSobrePortal(e,link.getAttribute('href'));});
+})();
+
+/* "Avisos recentes", dentro de "Programas e ferramentas do CAEF" (Etapa 1).
+   Lê exclusivamente window.caefAvisosPublicados (exposto pelo bloco do
+   Mural, acima neste arquivo) — não duplica texto: é a mesma lista.
+   Todo campo vindo dos dados (título, texto, origem, dataOriginal) é
+   escrito com textContent via createElement — nunca concatenado em
+   innerHTML — então nenhum deles pode injetar HTML/script, qualquer
+   que seja o conteúdo cadastrado em avisos.js. */
+(function(){
+  'use strict';
+  var wrap=document.getElementById('nowAvisosList');
+  if(!wrap)return;
+  var lista=window.caefAvisosPublicados;
+  wrap.innerHTML='';
+  if(!lista||!lista.length){
+    var empty=document.createElement('p');
+    empty.className='now-avisos-empty';
+    empty.textContent='Nenhum aviso publicado no momento.';
+    wrap.appendChild(empty);
+    return;
+  }
+  lista.slice(0,2).forEach(function(a){
+    var card=document.createElement('a');
+    card.className='now-aviso-card';
+    card.href='#mural';
+    var h4=document.createElement('h4');
+    h4.textContent=a.titulo||'';
+    var p=document.createElement('p');
+    p.textContent=a.texto||'';
+    var origem=document.createElement('span');
+    origem.className='now-avisos-origem';
+    origem.textContent=(a.origem||'')+' · '+(a.dataOriginal||'');
+    card.appendChild(h4);
+    card.appendChild(p);
+    card.appendChild(origem);
+    wrap.appendChild(card);
   });
 })();
 

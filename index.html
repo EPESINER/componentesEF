@@ -110,7 +110,7 @@
 <main id="main">
 
 <section id="inicio" class="tab-panel active">
-  <div class="hero">
+  <div class="hero hero-compact">
     <div class="hero-grid" aria-hidden="true"></div>
     <div class="wrap hero-inner">
       <p class="hero-eyebrow">GESTÃO SINERGIA · CAEF/UFPB</p>
@@ -131,38 +131,49 @@
   </div>
 
 
-  <section class="start-guide" id="por-onde-comecar" aria-labelledby="start-guide-title">
+  <section class="start-guide start-guide-v2" id="por-onde-comecar" aria-labelledby="start-guide-title">
     <div class="wrap">
-      <div class="start-guide-shell">
+      <div class="start-guide-shell start-guide-shell-v2">
         <div class="start-guide-intro">
           <p class="section-index">Seu caminho no CAEF</p>
           <h2 id="start-guide-title">Por onde começar?</h2>
-          <p>Conte o que você procura. A gente mostra onde encontrar no portal.</p>
+          <p>Escolha o que você procura agora. Cada opção leva direto ao lugar certo do portal.</p>
         </div>
         <div class="start-guide-flow" id="startGuideFlow">
           <div class="start-guide-step" id="startGuideStepOne">
-            <p class="start-guide-question">O que você precisa hoje?</p>
-            <button class="start-guide-choice" type="button" id="startGuideServices" aria-controls="startGuideStepTwo" aria-expanded="false">
-              <span class="start-guide-choice-icon" aria-hidden="true">↗</span>
-              <span><strong>Acessar um serviço acadêmico</strong><small>Acervo, Apadrinhamento, Ouvidoria e outros serviços</small></span>
-              <span class="start-guide-choice-arrow" aria-hidden="true">→</span>
-            </button>
-            <p class="start-guide-hint">Procurando projetos ou vagas? <a href="#radar">Explore o Radar CAEF</a>.</p>
+            <div class="start-guide-buckets" role="group" aria-label="O que você procura?">
+              <button type="button" class="start-guide-bucket" data-bucket="estudos" aria-controls="startGuideStepTwo" aria-expanded="false">
+                <span class="start-guide-bucket-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M6 12h12"/><circle cx="6" cy="4" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="4" r="1.4" fill="currentColor" stroke="none"/></svg></span>
+                <span class="start-guide-bucket-label">Organizar meus estudos</span>
+                <span class="start-guide-bucket-hint">Trilhas, comparativo de habilitações e quiz de disciplinas</span>
+              </button>
+              <button type="button" class="start-guide-bucket" data-bucket="oportunidades" aria-controls="startGuideStepTwo" aria-expanded="false">
+                <span class="start-guide-bucket-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+                <span class="start-guide-bucket-label">Encontrar oportunidades</span>
+                <span class="start-guide-bucket-hint">Vagas de pesquisa e extensão, laboratórios e projetos do DEF</span>
+              </button>
+              <button type="button" class="start-guide-bucket" data-bucket="apoio" aria-controls="startGuideStepTwo" aria-expanded="false">
+                <span class="start-guide-bucket-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v13H7l-3 3z"/><path d="M8 9h8M8 13h5"/></svg></span>
+                <span class="start-guide-bucket-label">Buscar apoio ou serviços</span>
+                <span class="start-guide-bucket-hint">Acervo, apadrinhamento e ouvidoria do discente</span>
+              </button>
+              <button type="button" class="start-guide-bucket" data-bucket="comunidade" aria-controls="startGuideStepTwo" aria-expanded="false">
+                <span class="start-guide-bucket-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5H21l-5.2 4 2 6.5L12 15l-5.8 4 2-6.5L3 8.5h6.5z"/></svg></span>
+                <span class="start-guide-bucket-label">Conhecer o CAEF</span>
+                <span class="start-guide-bucket-hint">Formação, iniciativas e quem compõe a gestão do CAEF</span>
+              </button>
+            </div>
+            <p class="start-guide-hint">Prefere ver tudo de uma vez? <a href="#sobre-portal">Veja a Central do Estudante completa</a>.</p>
           </div>
           <div class="start-guide-step" id="startGuideStepTwo" hidden>
-            <div class="start-guide-step-top"><span class="start-guide-step-label">Serviços</span><button type="button" class="start-guide-back" id="startGuideBack">← Voltar</button></div>
-            <p class="start-guide-question">Como podemos ajudar?</p>
-            <div class="start-guide-options" role="group" aria-label="Escolha um serviço">
-              <button type="button" class="start-guide-option" data-service="acervo" aria-pressed="false"><strong>Acervo Acadêmico</strong><span>Encontrar materiais e referências para estudar</span></button>
-              <button type="button" class="start-guide-option" data-service="apadrinhamento" aria-pressed="false"><strong>Apadrinhamento Acadêmico</strong><span>Conhecer o programa de acolhimento entre estudantes</span></button>
-              <button type="button" class="start-guide-option" data-service="ouvidoria" aria-pressed="false"><strong>Ouvidoria CAEF</strong><span>Encaminhar uma dúvida, sugestão ou manifestação</span></button>
-              <button type="button" class="start-guide-option" data-service="central" aria-pressed="false"><strong>Central de Serviços</strong><span>Ver os serviços disponíveis neste portal</span></button>
-            </div>
+            <div class="start-guide-step-top"><span class="start-guide-step-label" id="startGuideStepTwoLabel">—</span><button type="button" class="start-guide-back" id="startGuideBack">← Voltar</button></div>
+            <p class="start-guide-question" id="startGuideQuestion">Para onde você quer ir?</p>
+            <div class="start-guide-options" id="startGuideOptions" role="group" aria-label="Escolha um destino"></div>
             <div class="start-guide-result" id="startGuideResult" role="status" aria-live="polite" hidden>
               <p class="start-guide-result-label">Seu próximo passo</p>
               <h3 id="startGuideResultTitle"></h3>
               <p id="startGuideResultText"></p>
-              <a id="startGuideResultLink" class="start-guide-action" href="#acervo">Acessar serviço <span aria-hidden="true">→</span></a>
+              <a id="startGuideResultLink" class="start-guide-action" href="#acervo">Acessar <span aria-hidden="true">→</span></a>
             </div>
           </div>
         </div>
@@ -173,46 +184,47 @@
   <div class="hub" id="sobre-portal">
     <div class="wrap">
       <div class="hub-head">
-        <p class="section-index">01 · O que você procura?</p>
+        <p class="section-index">Mapa completo do portal</p>
         <h2 class="section-title">Central do Estudante</h2>
-        <p class="section-lede">Acesse rapidamente as áreas mais procuradas por estudantes de Educação Física. O menu também reúne todas as seções do portal.</p>
+        <p class="section-lede">Todas as áreas do portal, reunidas por assunto. O menu também reúne todas as seções.</p>
       </div>
 
-      <p class="section-index" style="margin-top:28px;">Primeiros passos</p>
+      <p class="section-index" style="margin-top:28px;">Ensino e trajetória</p>
       <div class="hub-grid">
-        <a class="hub-card" href="#apadrinhamento"><span class="n">01</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><path d="M14 14.5c3-.3 5.5 2 5.5 5.5"/></svg><h3>Apadrinhamento Acadêmico</h3><p>Mentoria entre veteranos e calouros. A edição 2026.2 está em andamento.</p><span class="go">Saiba mais →</span></a>
-        <a class="hub-card" href="#comparativo"><span class="n">02</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>Comparativo Bacharelado × Licenciatura</h3><p>Entenda as diferenças entre as duas habilitações antes de escolher seu caminho.</p><span class="go">Comparar →</span></a>
-        <a class="hub-card" href="#acervo"><span class="n">03</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/><path d="M8 7h6M8 10h6"/></svg><h3>Acervo Acadêmico</h3><p>Fontes gratuitas e legais de bibliografia, organizadas por período.</p><span class="go">Acessar acervo →</span></a>
-      </div>
-
-      <p class="section-index" style="margin-top:34px;">Ensino e trajetória</p>
-      <div class="hub-grid">
-        <a class="hub-card" href="#trilhas"><span class="n">04</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M6 12h12"/><circle cx="6" cy="4" r="1.4"/><circle cx="18" cy="4" r="1.4"/></svg><h3>Trilhas de disciplinas de saúde</h3><p>Disciplinas de outros cursos de saúde que podem contar como optativas.</p><span class="go">Ver trilhas →</span></a>
-        <a class="hub-card" href="#trilhas-cchla"><span class="n">05</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 15c2.8.3 4.5 2.3 4.5 5"/></svg><h3>Trilhas CCHLA</h3><p>Disciplinas de humanidades que podem contar como optativas, com foco na Licenciatura.</p><span class="go">Ver trilhas →</span></a>
-        <a class="hub-card" href="#quiz"><span class="n">06</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><h3>Descubra sua trilha</h3><p>Um quiz rápido para ver uma sugestão inicial de disciplinas conforme sua área de interesse.</p><span class="go">Fazer o quiz →</span></a>
-        <a class="hub-card" href="#carreiras"><span class="n">07</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5H21l-5.2 4 2 6.5L12 15l-5.8 4 2-6.5L3 8.5h6.5z"/></svg><h3>Perfis de carreira</h3><p>Áreas de atuação da Educação Física e as disciplinas-chave para cada uma.</p><span class="go">Ver perfis →</span></a>
+        <a class="hub-card" href="#comparativo"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>Comparativo Bacharelado × Licenciatura</h3><p>Entenda as diferenças entre as duas habilitações antes de escolher seu caminho.</p><span class="go">Comparar →</span></a>
+        <a class="hub-card" href="#trilhas"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M6 12h12"/><circle cx="6" cy="4" r="1.4"/><circle cx="18" cy="4" r="1.4"/></svg><h3>Trilhas de disciplinas de saúde</h3><p>Disciplinas de outros cursos de saúde que podem contar como optativas.</p><span class="go">Ver trilhas →</span></a>
+        <a class="hub-card" href="#trilhas-cchla"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 15c2.8.3 4.5 2.3 4.5 5"/></svg><h3>Trilhas CCHLA</h3><p>Disciplinas de humanidades que podem contar como optativas, com foco na Licenciatura.</p><span class="go">Ver trilhas →</span></a>
+        <a class="hub-card" href="#quiz"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><h3>Descubra sua trilha</h3><p>Um quiz rápido para ver uma sugestão inicial de disciplinas conforme sua área de interesse.</p><span class="go">Fazer o quiz →</span></a>
+        <a class="hub-card" href="#carreiras"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5H21l-5.2 4 2 6.5L12 15l-5.8 4 2-6.5L3 8.5h6.5z"/></svg><h3>Perfis de carreira</h3><p>Áreas de atuação da Educação Física e as disciplinas-chave para cada uma.</p><span class="go">Ver perfis →</span></a>
       </div>
 
       <p class="section-index" style="margin-top:34px;">Oportunidades e formação</p>
       <div class="hub-grid">
-        <a class="hub-card" href="#radar"><span class="n">08</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><h3>Radar CAEF</h3><p>Vagas de extensão e de pesquisa em laboratórios do DEF, mapeadas com os responsáveis e reunidas num buscador com filtros.</p><span class="go">Ver oportunidades →</span></a>
-        <a class="hub-card" href="#portas-abertas"><span class="n">09</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 15c2.8.3 4.5 2.3 4.5 5"/></svg><h3>CAEF Portas Abertas</h3><p>Visitas guiadas para conhecer laboratórios, espaços acadêmicos e as pessoas que fazem pesquisa no curso.</p><span class="go">Conhecer o programa →</span></a>
-        <a class="hub-card" href="#formacao"><span class="n">10</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5H21l-5.2 4 2 6.5L12 15l-5.8 4 2-6.5L3 8.5h6.5z"/></svg><h3>CAEF Formação</h3><p>Oficinas e minicursos para apoiar a vida acadêmica. A primeira edição será sobre Currículo Lattes.</p><span class="go">Ver programação →</span></a>
-        <a class="hub-card" href="#pesquisa"><span class="n">11</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4l-4 8a4 4 0 004 6h6a4 4 0 004-6l-4-8V3"/><path d="M6 15h12"/></svg><h3>Pesquisa</h3><p>Laboratórios, grupos e linhas de pesquisa do DEF/UFPB, com a fonte de cada informação identificada.</p><span class="go">Ver pesquisa →</span></a>
-        <a class="hub-card" href="#extensao"><span class="n">12</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 15c2.8.3 4.5 2.3 4.5 5"/></svg><h3>Extensão</h3><p>Projetos de extensão do DEF/UFPB mapeados com os coordenadores responsáveis.</p><span class="go">Ver projetos →</span></a>
+        <a class="hub-card" href="#radar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><h3>Radar CAEF</h3><p>Vagas de extensão e de pesquisa em laboratórios do DEF, mapeadas com os responsáveis e reunidas num buscador com filtros.</p><span class="go">Ver oportunidades →</span></a>
+        <a class="hub-card" href="#portas-abertas"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 15c2.8.3 4.5 2.3 4.5 5"/></svg><h3>CAEF Portas Abertas</h3><p>Visitas guiadas para conhecer laboratórios, espaços acadêmicos e as pessoas que fazem pesquisa no curso.</p><span class="go">Conhecer o programa →</span></a>
+        <a class="hub-card" href="#formacao"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5H21l-5.2 4 2 6.5L12 15l-5.8 4 2-6.5L3 8.5h6.5z"/></svg><h3>CAEF Formação</h3><p>Oficinas e minicursos para apoiar a vida acadêmica. A primeira edição será sobre Currículo Lattes.</p><span class="go">Ver programação →</span></a>
+        <a class="hub-card" href="#pesquisa"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4l-4 8a4 4 0 004 6h6a4 4 0 004-6l-4-8V3"/><path d="M6 15h12"/></svg><h3>Pesquisa</h3><p>Laboratórios, grupos e linhas de pesquisa do DEF/UFPB, com a fonte de cada informação identificada.</p><span class="go">Ver pesquisa →</span></a>
+        <a class="hub-card" href="#extensao"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 15c2.8.3 4.5 2.3 4.5 5"/></svg><h3>Extensão</h3><p>Projetos de extensão do DEF/UFPB mapeados com os coordenadores responsáveis.</p><span class="go">Ver projetos →</span></a>
       </div>
 
       <p class="section-index" style="margin-top:34px;">Apoio ao estudante</p>
       <div class="hub-grid">
-        <a class="hub-card" href="#ouvidoria"><span class="n">13</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v13H7l-3 3z"/><path d="M8 9h8M8 13h5"/></svg><h3>Ouvidoria do Discente</h3><p>Canal direto com a Diretoria de Ensino, Pesquisa e Extensão do CAEF.</p><span class="go">Enviar manifestação →</span></a>
+        <a class="hub-card" href="#acervo"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/><path d="M8 7h6M8 10h6"/></svg><h3>Acervo Acadêmico</h3><p>Fontes gratuitas e legais de bibliografia, organizadas por período.</p><span class="go">Acessar acervo →</span></a>
+        <a class="hub-card" href="#apadrinhamento"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><path d="M14 14.5c3-.3 5.5 2 5.5 5.5"/></svg><h3>Apadrinhamento Acadêmico</h3><p>Mentoria entre veteranos e calouros. A edição 2026.2 está em andamento.</p><span class="go">Saiba mais →</span></a>
+        <a class="hub-card" href="#ouvidoria"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v13H7l-3 3z"/><path d="M8 9h8M8 13h5"/></svg><h3>Ouvidoria do Discente</h3><p>Canal direto com a Diretoria de Ensino, Pesquisa e Extensão do CAEF.</p><span class="go">Enviar manifestação →</span></a>
+      </div>
+
+      <p class="section-index" style="margin-top:34px;">Conheça o CAEF</p>
+      <div class="hub-grid">
+        <a class="hub-card" href="#gestao"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="7" r="3"/><path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/><path d="M14 14.5c3-.3 5.5 2 5.5 5.5"/></svg><h3>Conheça a Gestão</h3><p>Integrantes da Gestão Sinergia, organizados pelas três diretorias do CAEF.</p><span class="go">Ver a gestão →</span></a>
       </div>
 
       <p class="section-index" style="margin-top:34px;">Canais oficiais da UFPB</p>
       <p style="font-size:14.5px;color:var(--ink-muted);line-height:1.7;margin:0 0 16px;max-width:640px;">Os três atalhos abaixo levam a canais oficiais e externos da própria UFPB — não são administrados pelo CAEF nem fazem parte deste portal.</p>
       <div class="hub-grid">
-        <a class="hub-card" href="https://sigaa.ufpb.br" target="_blank" rel="noopener"><span class="n">14</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>SIGAA UFPB ↗</h3><p>Sistema oficial da UFPB para matrícula, histórico e demais registros acadêmicos.</p><span class="go">Acessar site oficial →</span></a>
-        <a class="hub-card" href="https://www.ufpb.br" target="_blank" rel="noopener"><span class="n">15</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>Portal UFPB ↗</h3><p>Site institucional da Universidade Federal da Paraíba.</p><span class="go">Acessar site oficial →</span></a>
-        <a class="hub-card" href="mailto:coordef@ccs.ufpb.br"><span class="n">16</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>Chefia do DEF ↗</h3><p>Contato oficial da Chefia do Departamento de Educação Física.</p><span class="go">Enviar e-mail →</span></a>
+        <a class="hub-card" href="https://sigaa.ufpb.br" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>SIGAA UFPB ↗</h3><p>Sistema oficial da UFPB para matrícula, histórico e demais registros acadêmicos.</p><span class="go">Acessar site oficial →</span></a>
+        <a class="hub-card" href="https://www.ufpb.br" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>Portal UFPB ↗</h3><p>Site institucional da Universidade Federal da Paraíba.</p><span class="go">Acessar site oficial →</span></a>
+        <a class="hub-card" href="mailto:coordef@ccs.ufpb.br"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>Chefia do DEF ↗</h3><p>Contato oficial da Chefia do Departamento de Educação Física.</p><span class="go">Enviar e-mail →</span></a>
       </div>
     </div>
   </div>
@@ -221,8 +233,8 @@
     <div class="wrap">
       <div class="now-head">
         <div>
-          <p class="section-index">02 · Agora</p>
-          <h2 class="section-title">Acontecendo agora</h2>
+          <p class="section-index">Em destaque</p>
+          <h2 class="section-title">Programas e ferramentas do CAEF</h2>
         </div>
         <a href="#radar">Ver todas as oportunidades →</a>
       </div>
@@ -232,24 +244,25 @@
           <h3>Apadrinhamento Acadêmico 2026.2</h3>
           <p>Veteranos a partir do 2º período podem participar como padrinhos/madrinhas e obter certificação de até 60 horas de AACC, conforme os critérios do programa.</p>
         </a>
+        <a class="now-card" href="#radar">
+          <span class="now-tag">Ferramenta do CAEF</span>
+          <h3>Radar CAEF</h3>
+          <p>Reunimos vagas de extensão e pesquisa mapeadas com docentes do DEF. Busque por área, turno e modalidade.</p>
+        </a>
         <a class="now-card" href="#ouvidoria">
-          <span class="now-tag">Canal oficial</span>
+          <span class="now-tag">Canal permanente</span>
           <h3>Ouvidoria do Discente</h3>
           <p>Tem alguma demanda sobre disciplinas, horários ou assiduidade docente? Fale direto com a Diretoria de Ensino, Pesquisa e Extensão.</p>
         </a>
-        <a class="now-card" href="#radar">
-          <span class="now-tag">Ferramenta nova</span>
-          <h3>Radar CAEF no ar</h3>
-          <p>Reunimos vagas de extensão e pesquisa mapeadas com docentes do DEF. Busque por área, turno e modalidade.</p>
-        </a>
       </div>
-    </div>
-  </div>
 
-  <div class="wrap">
-    <div class="callout" style="margin-top:40px;">
-      <h3>Mural de Avisos do CAEF</h3>
-      <p style="margin:0;font-size:14.5px;color:var(--ink-muted);line-height:1.7;">Comunicados oficiais da Diretoria Geral do CAEF sobre os espaços e o dia a dia do centro acadêmico. <a href="#mural" style="color:var(--green-700);font-weight:700;text-underline-offset:3px;">Ver avisos do CAEF →</a></p>
+      <div class="now-avisos" id="nowAvisos">
+        <div class="now-avisos-head">
+          <p class="section-index" style="color:var(--gold-400);">Avisos recentes</p>
+          <a href="#mural">Ver todos os avisos →</a>
+        </div>
+        <div id="nowAvisosList"></div>
+      </div>
     </div>
   </div>
 </section>

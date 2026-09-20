@@ -177,8 +177,8 @@ A carga horária de AACC do Apadrinhamento Acadêmico (60h) foi confirmada pela 
 Dúvidas sobre a estrutura do código podem ser encaminhadas a quem mantém o repositório do portal. Dúvidas sobre o conteúdo institucional (vagas, laboratórios, Apadrinhamento, Ouvidoria) devem ser resolvidas com a Diretoria de Ensino, Pesquisa e Extensão do CAEF antes de publicar qualquer atualização.
 
 
-## Guia interativo “Por onde começar?”
-Na Home, a opção Serviços abre quatro destinos: Acervo (`#acervo`), Apadrinhamento (`#apadrinhamento`), Ouvidoria (`#ouvidoria`) e Central de Serviços (central de navegação existente, `#sobre-portal`). A central não é uma nova página; o guia leva à seção já existente na Home. O fluxo é local, sem cadastro, cookies ou coleta de respostas.
+## Guia interativo “Por onde começar?” (atualizado na Etapa 1 — ver seção mais abaixo)
+Na Home, o guia abre em 4 caminhos — Organizar meus estudos, Encontrar oportunidades, Buscar apoio ou serviços, Conhecer o CAEF — cada um levando a um conjunto de destinos reais do portal (a lista completa está comentada no início da função do guia, em `js/main.js`). Selecionar um caminho não navega sozinho: primeiro mostra as opções daquele caminho: cada opção já traz sua descrição visível; ao escolher uma delas, um painel de resultado mostra o destino e um botão de acesso, que precisa ser confirmado (clique/toque/Enter) para sair da página. O botão "← Voltar" devolve o foco exatamente ao caminho de origem. O fluxo é local, sem cadastro, cookies ou coleta de respostas.
 
 
 ## V10: Ensino interativo
@@ -212,3 +212,19 @@ Nada foi alterado nas demais seções, nos links de inscrição/manual existente
 Nova seção "Mural de Avisos" (`#mural`), acessível por um link na página inicial (abaixo de "Acontecendo agora", que permanece inalterada) e pelo rodapé — sem entrar no menu principal. O conteúdo vem de `js/data/avisos.js`, seguindo o mesmo padrão de `formacao.js` (ver seção 4.9 acima para a rotina de manutenção). Nesta rodada, só o comunicado "Sala de descanso e estudo" (Diretoria Geral do CAEF, 16/09/2026) foi publicado, com o texto exatamente como aprovado. Os campos de título, texto e origem de cada aviso são exibidos sempre como texto simples (nunca como HTML interpretado), então marcação eventualmente digitada em `avisos.js` aparece na tela como texto, sem efeito sobre o layout.
 
 No rodapé, a coluna "Institucional" manteve seus 4 links originais (Créditos, SIGAA, Portal UFPB, Chefia do DEF) e ganhou um segundo grupo abaixo, "Canais do CAEF", com o Instagram (`instagram.com/caef_ufpb`, bio conferida antes da publicação) e a comunidade do CAEF no WhatsApp (link de convite `chat.whatsapp.com/GBH6Jfzxzfs1wHDBFTYhsD`, confirmado pelo usuário como o convite correto de acesso à comunidade). Nenhuma coluna nova foi criada e a estrutura de 4 colunas do rodapé não mudou. O WhatsApp é identificado apenas como acesso à comunidade do CAEF — não como canal de atendimento individual nem de resposta imediata. Não há qualquer sincronização automática com WhatsApp ou Instagram: a atualização do Mural continua sendo manual, um aviso de cada vez, com aprovação prévia da Diretoria Geral do CAEF.
+
+
+## Etapa 1 — Reorganização da página inicial
+
+A Home foi reorganizada: hero compactado no celular; guia "Por onde começar?" com 4 caminhos (ver seção acima); Central do Estudante sem numeração sequencial, com o cartão "Conheça a Gestão"; "Programas e ferramentas do CAEF" separado de "Avisos recentes" (que lê `window.caefAvisosPublicados`, os mesmos dados do Mural, sem duplicar texto); e o antigo aviso de rodapé do Mural substituído pelo link "Ver todos os avisos". Alterações em `index.html`, `css/style.css` e `js/main.js`; nenhum arquivo de dados foi tocado.
+
+**Correções de acabamento (rodada seguinte):** o botão "← Voltar" do guia agora devolve o foco ao caminho de origem (antes voltava sempre para o primeiro botão da lista); a prévia de "Avisos recentes" passou a montar o card com `createElement`/`textContent` em vez de concatenar HTML — todos os campos vindos de `avisos.js` (título, texto, origem, *inclusive a data*) ficam protegidos, na mesma linha do que o Mural completo já fazia.
+
+**Pontos que precisarão de revisão quando a edição 2026.2 do Apadrinhamento terminar:** o status exibido no portal (selo "EM EXECUÇÃO" na aba Apadrinhamento) vem de uma única fonte, a constante `APADRINHAMENTO_STATUS` em `js/data/apadrinhamento.js` — trocar seu valor para `"encerrado"` já atualiza esse selo automaticamente. Os pontos abaixo, porém, são texto digitado à parte na Home e no guia e **não mudam sozinhos** quando o status muda; qualquer um deles precisará de edição manual, sempre com confirmação da Diretoria antes de publicar:
+
+- `index.html`: cartão "Apadrinhamento Acadêmico" na Central do Estudante — "A edição 2026.2 está em andamento."
+- `index.html`: em "Programas e ferramentas do CAEF", a etiqueta "Programa CAEF · em execução" e o título "Apadrinhamento Acadêmico 2026.2" do card em destaque.
+- `js/main.js`: descrição da opção "Apadrinhamento Acadêmico" no caminho "Buscar apoio ou serviços" do guia — mesmo texto "A edição 2026.2 está em andamento."
+- Fora da Home/guia, mas na mesma frase: `js/data/busca-secoes.js` (resumo usado pela Busca Geral) e a própria aba Apadrinhamento (`index.html`, kicker "Acompanhamento e certificação · 2026.2" e o valor padrão "2026.2" do campo "Período de participação" no Relatório Final).
+
+Conferido nesta rodada (20/09/2026): as fases cadastradas em `js/data/apadrinhamento.js` (Acolhimento em agosto/setembro, Adaptação em setembro, Integração em outubro, Acompanhamento em novembro/dezembro, Encerramento na última semana de aula) mostram que a edição 2026.2 ainda está em curso na data de hoje — nenhum texto foi alterado. Não há, porém, uma data de encerramento explícita cadastrada; o sinal mais confiável de que a edição terminou continua sendo a confirmação da própria Diretoria/coordenação do programa, não uma verificação automática do portal.
