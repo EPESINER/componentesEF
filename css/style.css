@@ -88,7 +88,6 @@ header.site-nav{position:sticky;top:0;z-index:50;}
 
 .nav-burger{display:none;flex-direction:column;justify-content:center;gap:4px;width:34px;height:34px;cursor:pointer;flex-shrink:0;background:none;border:none;}
 .nav-burger span{display:block;width:100%;height:2px;border-radius:2px;transition:transform .2s,opacity .2s;}
-.nav-check{display:none;}
 
 /* Ícone de busca no cabeçalho (Etapa 4 — Fase 1). Fica ao lado do
    burger, fora do .nav-menu, para continuar acessível mesmo com o
@@ -112,10 +111,10 @@ header.site-nav{position:sticky;top:0;z-index:50;}
   .nav-search-btn{margin-left:auto;}
   .nav-burger{display:flex;}
   .nav-menu{display:none;width:100%;flex-direction:column;padding-bottom:12px;gap:0;}
-  .nav-check:checked ~ .site-nav .nav-menu{display:flex;}
-  .nav-check:checked ~ .site-nav .nav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg);}
-  .nav-check:checked ~ .site-nav .nav-burger span:nth-child(2){opacity:0;}
-  .nav-check:checked ~ .site-nav .nav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+  .site-nav.nav-open .nav-menu{display:flex;}
+  .site-nav.nav-open .nav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .site-nav.nav-open .nav-burger span:nth-child(2){opacity:0;}
+  .site-nav.nav-open .nav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
   .nav-group{width:100%;}
   .nav-group summary{padding:14px 4px;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1);}
   .nav-dropdown{position:static;border:none;box-shadow:none;background:rgba(0,0,0,.15);border-radius:0;margin-bottom:4px;}
@@ -361,6 +360,48 @@ table.disc td.ch{text-align:right;font-family:var(--font-mono);color:var(--green
 .career-role{font-family:var(--font-display);text-transform:uppercase;font-size:14.5px;color:var(--green-900);letter-spacing:.01em;}
 .career-disc{font-size:13px;color:var(--ink-muted);margin-top:4px;line-height:1.5;}
 
+/* ---------- V28: Painel de Gestão ---------- */
+.painel-tabs{display:flex;gap:8px;margin:18px 0;border-bottom:1px solid var(--line);}
+.painel-tab-btn{font:inherit;font-size:14px;font-weight:700;color:var(--ink-muted);background:none;border:none;border-bottom:2.5px solid transparent;padding:10px 4px;cursor:pointer;min-height:44px;}
+.painel-tab-btn:hover{color:var(--green-800);}
+.painel-tab-btn[aria-selected="true"]{color:var(--green-900);border-bottom-color:var(--green-600);}
+.painel-modulo-actions{margin:14px 0;}
+.painel-lista{display:flex;flex-direction:column;gap:10px;}
+.painel-item{background:var(--white);border:1px solid var(--line);border-radius:var(--radius-md);padding:16px 18px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;}
+.painel-item-info{flex:1;min-width:220px;}
+.painel-item-info h4{margin:0 0 4px;font-size:15px;color:var(--green-900);}
+.painel-item-info p{margin:0;font-size:13px;color:var(--ink-muted);}
+.painel-item-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.painel-badge{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;padding:3px 9px;border-radius:100px;background:var(--paper-alt);color:var(--ink-muted);}
+.painel-badge.publicado,.painel-badge.autorizado{background:var(--green-100);color:var(--green-800);}
+.painel-badge.pendente{background:var(--gold-100,#fdf3d6);color:#705800;}
+.painel-badge.arquivado,.painel-badge.nao-autorizado{background:var(--paper-alt);color:var(--ink-faint);}
+.painel-badge.revisao-pendente{background:#f7e3e0;color:var(--red-600,#A23B2E);}
+.painel-item-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.painel-confirm{background:#fdeceb;border:1px solid #e8a9a3;border-radius:var(--radius-md);padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13.5px;color:#7a2118;width:100%;}
+.painel-form-field{margin-bottom:14px;}
+.painel-form-field label{display:block;font-size:13px;font-weight:700;color:var(--green-900);margin-bottom:4px;}
+.painel-form-field input[type="text"],.painel-form-field input[type="url"],.painel-form-field input[type="date"],.painel-form-field textarea,.painel-form-field select{width:100%;font:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line-strong);border-radius:9px;background:#fff;}
+.painel-form-field textarea{min-height:90px;resize:vertical;}
+.painel-form-row{display:flex;gap:12px;flex-wrap:wrap;}
+.painel-form-row .painel-form-field{flex:1;min-width:160px;}
+.painel-form-check{display:flex;align-items:center;gap:8px;font-size:13.5px;margin-bottom:14px;}
+.painel-form-status{font-size:13.5px;margin:10px 0;min-height:18px;}
+.painel-form-status.is-error{color:#b3261e;}
+.painel-form-status.is-ok{color:var(--green-800);}
+.painel-form-status.is-warning{color:#8a5a00;}
+.painel-pendencias-limpeza{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.painel-pendencias-limpeza:empty{display:none;margin-bottom:0;}
+.painel-pendencias-limpeza .painel-form-status.is-warning{background:#fdf3d6;border:1px solid #e7c46a;border-radius:var(--radius-md);padding:10px 14px;margin:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.painel-pendencias-limpeza .painel-form-status.is-warning button{white-space:nowrap;}
+.painel-img-current{display:flex;gap:12px;align-items:center;margin-bottom:10px;}
+.painel-img-current img{width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--line);}
+
+/* ---------- V28: alternador de notificação (Minha Conta) ---------- */
+.student-notify{border:1px solid var(--line);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:20px;background:var(--paper-alt);}
+.student-toggle{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;margin-top:8px;}
+.student-toggle input[type="checkbox"]{width:20px;height:20px;flex-shrink:0;}
+
 /* ---------- Empty state ---------- */
 .empty-state{text-align:center;padding:56px 24px;border:1.5px dashed var(--line-strong);border-radius:var(--radius-lg);background:var(--white);}
 .empty-state svg{width:38px;height:38px;stroke:var(--ink-faint);margin-bottom:14px;}
@@ -387,6 +428,16 @@ table.disc td.ch{text-align:right;font-family:var(--font-mono);color:var(--green
 .formation-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin-top:16px;}
 .formation-fields div dt{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;color:var(--ink-faint);margin-bottom:2px;}
 .formation-fields div dd{margin:0;font-size:13.5px;color:var(--ink);}
+
+/* V28 — imagem opcional de aviso do Mural. Miniatura fixa ao lado do
+   texto; um aviso sem imagem não usa nenhuma destas regras (o elemento
+   simplesmente não existe no HTML nesse caso), então o layout dos avisos
+   sem imagem continua idêntico ao da V27. */
+.formation-card-img{width:120px;height:120px;object-fit:cover;border-radius:12px;flex-shrink:0;background:var(--line);}
+@media(max-width:640px){
+  .formation-card{flex-direction:column;}
+  .formation-card-img{width:100%;height:180px;}
+}
 
 .edition-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius-md);padding:26px;}
 .edition-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:20px 0;}
@@ -689,7 +740,7 @@ footer{background:var(--green-950);}
 @media(max-width:900px){
   .nav-group summary,.nav-single{color:#e6eee9;}
   .nav-burger span{background:var(--green-900);}
-  .nav-check:checked ~ .site-nav .nav-menu{background:var(--green-900);padding:10px 16px 16px;margin:0 -16px;width:calc(100% + 32px);}
+  .site-nav.nav-open .nav-menu{background:var(--green-900);padding:10px 16px 16px;margin:0 -16px;width:calc(100% + 32px);}
   .hero-inner{display:block;padding:66px 0 54px;}
   .hero-inner::after{display:none;}
   h1.hero-title{font-size:clamp(44px,12vw,64px);max-width:11ch;}
@@ -814,7 +865,7 @@ footer.site-footer{background:#062e22;}
 .footer-col h5{color:var(--gold-400);font-weight:800;}
 
 @media(max-width:900px){
-  .nav-check:checked ~ .site-nav .nav-menu{background:var(--green-950);}
+  .site-nav.nav-open .nav-menu{background:var(--green-950);}
   .nav-group summary,.nav-single{color:#eaf4ec;}
   .hero{background:linear-gradient(165deg,#f8f8f2 0 78%,#9bc526 78% 100%);}
   .hero::before{width:230px;height:230px;right:-95px;top:-85px;}
@@ -852,7 +903,7 @@ footer.site-footer{background:#062e22;}
   .nav-brand .brand-mark img{height:44px;}
   .nav-burger{width:40px;height:40px;gap:5px;}
   .nav-burger span{background:var(--green-900);height:2.5px;}
-  .nav-check:checked ~ .site-nav .nav-burger span{background:#fff;}
+  .site-nav.nav-open .nav-burger span{background:#fff;}
   .nav-search-btn{width:40px;height:40px;}
   main section{padding:44px 0;}
   .crumb{margin-bottom:22px;}
@@ -1140,3 +1191,189 @@ footer.site-footer{background:#062e22;}
    e com destaque mais claro, mantendo a descrição visível antes dele. */
 .start-guide-action{padding:14px 18px;font-size:15.5px;gap:14px;}
 .start-guide-action:focus-visible{outline:3px solid var(--gold-500,#f2c500);outline-offset:3px;}
+
+/* Área do Estudante V24 — não altera os estilos das outras abas */
+.student-area{padding-block:42px 80px;min-height:55vh}.student-panel{max-width:760px;padding:clamp(20px,4vw,34px);background:#fff;border:1px solid var(--line,#d8e2d7);border-radius:18px;box-shadow:0 8px 24px rgba(8,45,25,.04)}.student-panel h3{margin:0 0 12px;font-size:clamp(22px,3vw,28px);color:var(--green-950,#123b29)}.student-panel p{line-height:1.65}.student-note{font-size:14px;color:var(--ink-muted,#52635b)}.student-panel label{display:block;margin:22px 0 8px;font-weight:750}.student-panel input{display:block;width:100%;max-width:480px;padding:13px 14px;font:inherit;border:1px solid #a5b9aa;border-radius:9px;background:#fff;color:#173221}.student-panel small{display:block;margin-top:8px;color:var(--ink-muted,#52635b)}.student-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:15px;padding:10px 17px;font:inherit;font-weight:750;border-radius:9px;border:1px solid #145c36;background:#145c36;color:#fff;cursor:pointer}.student-button:disabled{opacity:.65;cursor:wait}.student-secondary{background:#fff;color:#145c36}.student-danger{background:#9a2020;border-color:#9a2020}.student-link{display:inline-flex;margin-top:12px;color:#145c36;font-weight:750}.student-status{max-width:760px;min-height:1.6em;margin-top:16px;font-weight:650;color:#145c36}.student-error{color:#9a2020}.student-controls{display:flex;gap:12px;flex-wrap:wrap}.student-announcement{padding:18px 0;border-bottom:1px solid var(--line,#d8e2d7)}.student-announcement h5{margin:0 0 8px;font-size:17px}.student-announcement p{margin:0}.student-announcements{margin-top:24px}.student-delete{margin-top:35px;padding-top:20px;border-top:1px solid var(--line,#d8e2d7)}.student-delete h4{margin:0 0 8px}.student-area :is(a,button,input):focus-visible{outline:3px solid #b78500;outline-offset:3px}.student-panel[hidden],#studentDeleteForm[hidden]{display:none!important}@media(max-width:600px){.student-area{padding-block:24px 52px}}
+
+/* =====================================================================
+   Área do Estudante — REDESIGN V26
+   Tudo abaixo é aditivo/sobrescreve por especificidade; nada nas regras
+   V24 acima foi removido, para não arriscar nenhuma outra seção do site.
+   ===================================================================== */
+
+/* Estado: carregando */
+.student-loading{display:flex;align-items:center;gap:14px;max-width:760px;padding:28px clamp(20px,4vw,34px);background:#fff;border:1px solid var(--line,#d8e2d7);border-radius:18px;box-shadow:var(--shadow-card,0 1px 2px rgba(11,31,23,.06));}
+.student-loading[hidden]{display:none!important;}
+.student-loading p{margin:0;color:var(--ink-muted,#52635b);font-weight:650;}
+.student-spinner{width:22px;height:22px;flex:0 0 auto;border-radius:50%;border:3px solid var(--green-100,#e9f4d5);border-top-color:var(--green-700,#16824b);animation:studentSpin .8s linear infinite;}
+@media(prefers-reduced-motion:reduce){.student-spinner{animation-duration:2.4s;}}
+@keyframes studentSpin{to{transform:rotate(360deg);}}
+
+/* Estado: desativado/indisponível — painel único, mais compacto que antes */
+.student-panel-solo{max-width:620px;}
+
+/* Estado: tela de acesso — dois blocos no desktop */
+.student-access-shell{
+  display:grid;
+  grid-template-columns:minmax(240px,.86fr) minmax(0,1.14fr);
+  gap:clamp(18px,3vw,0px);
+  align-items:stretch;
+  max-width:1040px;
+  border-radius:var(--radius-lg,22px);
+  overflow:hidden;
+  box-shadow:0 12px 36px rgba(15,61,40,.09);
+}
+.student-intro{
+  background:var(--green-950,#073b2a);
+  color:#fff;
+  padding:clamp(28px,4vw,44px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:14px;
+}
+.student-intro .kicker{color:var(--gold-400,#ffdc3d);margin:0;}
+.student-intro h3{margin:0;font-family:var(--font-display);text-transform:uppercase;font-size:clamp(24px,3vw,32px);color:#fff;line-height:1.12;}
+.student-intro > p{margin:0;color:#d2e1d6;line-height:1.65;max-width:38ch;}
+.student-intro-points{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;}
+.student-intro-points li{position:relative;padding-left:26px;color:#e3f0e7;font-size:14.5px;line-height:1.5;}
+.student-intro-points li::before{content:"✓";position:absolute;left:0;top:0;color:var(--gold-400,#ffdc3d);font-weight:800;}
+.student-intro-points strong{color:#fff;}
+
+.student-access-form{max-width:none;border-radius:0;box-shadow:none;border:0;border-left:1px solid var(--line,#d8e2d7);display:flex;flex-direction:column;justify-content:center;}
+.student-access-view h3{margin-top:0;}
+.student-access-links{margin:16px 0 0;font-size:13.5px;color:var(--ink-muted,#52635b);display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.student-linklike{font:inherit;font-size:13.5px;font-weight:700;background:none;border:0;padding:4px 2px;color:var(--green-700,#16824b);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.student-linklike:hover{color:var(--green-900,#07502f);}
+#studentAccessConsent{margin-top:22px;padding-top:16px;border-top:1px solid var(--line,#d8e2d7);}
+
+.student-password-row{display:flex;gap:8px;align-items:stretch;max-width:480px;}
+.student-password-row input{flex:1;min-width:0;margin:0;}
+.student-toggle-pw{flex:0 0 auto;border:1px solid #a5b9aa;background:#fff;color:var(--green-900,#07502f);font:inherit;font-size:13px;font-weight:700;border-radius:9px;padding:0 14px;cursor:pointer;min-height:44px;}
+.student-toggle-pw:hover{background:var(--green-50,#f6faed);}
+.student-toggle-pw[aria-pressed="true"]{background:var(--green-100,#e9f4d5);border-color:var(--green-600,#4d9c34);}
+
+.student-inline-status{max-width:480px;min-height:1.5em;margin:14px 0 0;font-weight:650;color:#145c36;font-size:14.5px;}
+.student-inline-status:empty{margin:0;min-height:0;}
+.student-inline-status.student-error{color:#9a2020;}
+
+@media(max-width:760px){
+  .student-access-shell{grid-template-columns:1fr;border-radius:18px;}
+  .student-intro{padding:26px 22px;}
+  .student-access-form{border-left:0;border-top:1px solid var(--line,#d8e2d7);padding:26px 22px;}
+  .student-password-row,.student-inline-status,.student-password-row input,form#studentLoginForm label+input{max-width:none;}
+}
+
+/* Área autenticada — cabeçalho, avatar, sub-navegação */
+.student-logged-head{display:flex;align-items:center;gap:16px;margin-bottom:22px;}
+.student-avatar{flex:0 0 auto;width:52px;height:52px;border-radius:50%;background:var(--green-800,#08643a);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:16px;letter-spacing:.02em;}
+.student-logged-head h3{margin:0 0 4px;font-family:var(--font-display);text-transform:uppercase;font-size:clamp(20px,2.6vw,26px);color:var(--green-950,#123b29);}
+.student-logged-head .student-note{margin:0;}
+
+.student-subnav{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line,#d8e2d7);margin-bottom:22px;}
+.student-subnav button{font-family:var(--font-display);text-transform:uppercase;font-size:13px;letter-spacing:.02em;color:var(--ink-muted,#52635b);background:none;border:0;border-bottom:3px solid transparent;padding:12px 4px;margin-right:20px;cursor:pointer;}
+.student-subnav button:hover{color:var(--green-800,#08643a);}
+.student-subnav button[aria-selected="true"]{color:var(--green-900,#07502f);border-bottom-color:var(--green-500,#8fbe22);}
+@media(max-width:600px){
+  .student-subnav{flex-wrap:nowrap;gap:4px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 20px;padding:0 16px 5px;-webkit-overflow-scrolling:touch;}
+  .student-subnav::-webkit-scrollbar{display:none;}
+  .student-subnav button{flex:0 0 auto;margin:0 6px 0 0;padding:10px 12px 9px;border:1px solid transparent;border-radius:999px;font-size:13px;white-space:nowrap;border-bottom:1px solid transparent;}
+  .student-subnav button[aria-selected="true"]{background:var(--green-100,#e9f4d5);border-color:#cfe1c8;color:var(--green-900,#07502f);}
+}
+
+/* Meu Perfil */
+.student-profile-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px;margin:0 0 18px;}
+.student-profile-facts > div{padding:14px 0;border-bottom:1px solid var(--line,#d8e2d7);}
+.student-profile-facts dt{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint,#829087);margin:0 0 4px;}
+.student-profile-facts dd{margin:0;font-weight:700;color:var(--green-950,#123b29);overflow-wrap:anywhere;}
+@media(max-width:560px){.student-profile-facts{grid-template-columns:1fr;}}
+
+.student-profile-form label{display:block;margin:18px 0 8px;font-weight:750;}
+.student-profile-form label:first-of-type{margin-top:0;}
+.student-profile-form input,.student-profile-form select{display:block;width:100%;max-width:480px;padding:13px 14px;font:inherit;border:1px solid #a5b9aa;border-radius:9px;background:#fff;color:#173221;}
+.student-profile-form small{display:block;margin-top:8px;color:var(--ink-muted,#52635b);}
+.student-field-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:560px;}
+.student-field-row > div{min-width:0;}
+.student-field-row label{margin-top:18px;}
+@media(max-width:560px){.student-field-row{grid-template-columns:1fr;}}
+
+/* Ajustes gerais de hierarquia dentro dos painéis pós-login */
+#studentPanelInicio h4,#studentPanelConta h4{font-family:var(--font-display);text-transform:uppercase;font-size:15px;color:var(--green-900,#07502f);margin:0 0 10px;}
+#studentPanelConta .student-delete{margin-top:32px;padding-top:20px;border-top:1px solid var(--line,#d8e2d7);}
+#studentPanelConta .student-delete h4{color:#7a2a2a;}
+
+.student-area :is(button,a,input,select)::placeholder{color:var(--ink-faint,#829087);}
+
+/* =====================================================================
+   V27 — Widget global de conta (acesso rápido a Meu Perfil / Minha Conta /
+   Sair, ou Entrar / Criar conta, disponível fora da Área do Estudante).
+   ===================================================================== */
+
+/* Guarda de especificidade (mesma categoria de bug corrigido na V26 para
+   .student-loading): .student-button já define display:inline-flex, o que
+   vence [hidden] por empate de especificidade quando o atributo hidden é
+   alternado via JS (ex.: botão "Remover foto"). */
+.student-button[hidden]{display:none!important;}
+
+.account-widget-slot-mobile{display:block;}
+
+.account-widget{position:relative;}
+.account-widget-desktop{position:fixed;left:20px;bottom:20px;z-index:60;transition:bottom .15s ease;}
+/* Quando o rodapé entra na tela (ver IntersectionObserver em
+   account-widget.js), o botão sobe para nunca ficar em cima de links do
+   rodapé nem atrapalhar seu uso. */
+.account-widget-desktop.account-avoid-footer{bottom:96px;}
+
+.account-fab{width:52px;height:52px;border-radius:50%;border:2px solid #fff;background:var(--green-800,#08643a);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;box-shadow:0 6px 18px rgba(8,45,25,.28);}
+.account-widget-mobile .account-fab{position:static;width:40px;height:40px;box-shadow:none;border-color:var(--green-800,#08643a);}
+.account-fab:hover{filter:brightness(1.08);}
+.account-fab-avatar{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:var(--font-display);font-weight:800;font-size:15px;}
+.account-fab-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.account-fab-avatar svg{width:60%;height:60%;stroke:#fff;}
+/* Mesma classe de bug de especificidade CSS já corrigida em outros pontos:
+   uma regra de autor que define display em "img"/"svg" empata em
+   especificidade com [hidden]{display:none} e, por estar depois no
+   arquivo, vence — deixando o elemento visível mesmo com o atributo
+   hidden presente. Reforça com !important nestes pontos específicos. */
+.account-fab-avatar img[hidden],.account-fab-avatar svg[hidden]{display:none!important;}
+
+/* Menu: no desktop, um cartão flutuante ancorado acima do botão (abre para
+   cima, já que o botão fica perto do rodapé da tela); no mobile, uma lista
+   comum dentro do próprio menu-hambúrguer, sem posicionamento fixo. */
+.account-menu{position:absolute;left:0;bottom:calc(100% + 10px);min-width:240px;max-width:min(86vw,300px);max-height:min(70vh,420px);overflow:auto;background:#fff;border:1px solid var(--line,#d8e2d7);border-radius:14px;box-shadow:0 14px 34px rgba(8,45,25,.18);padding:8px;z-index:61;}
+.account-menu[hidden]{display:none!important;}
+.account-widget-mobile .account-menu{position:static;left:auto;bottom:auto;box-shadow:none;border:1px solid var(--line,#d8e2d7);margin-top:8px;max-width:none;}
+.account-menu-head{padding:10px 12px 8px;border-bottom:1px solid var(--line,#d8e2d7);margin-bottom:6px;}
+.account-menu-head[hidden]{display:none!important;}
+.account-menu-email{margin:0;font-size:12.5px;color:var(--ink-muted,#52635b);word-break:break-all;}
+.account-menu-item{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:8px;border:none;background:none;font:inherit;font-weight:650;color:var(--ink,#1a2b20);cursor:pointer;text-decoration:none;}
+.account-menu-item[hidden]{display:none!important;}
+.account-menu-item:hover,.account-menu-item:focus-visible{background:var(--green-50,#eef6ee);color:var(--green-800,#08643a);outline:none;}
+.account-menu-item:focus-visible{box-shadow:inset 0 0 0 2px var(--gold-500,#b78500);}
+#accountMenuLogout{color:#7a2a2a;}
+#accountMenuLogout:hover,#accountMenuLogout:focus-visible{background:#fbeaea;color:#7a2a2a;}
+
+@media(max-width:900px){
+  .account-widget-slot-desktop{display:none;}
+}
+@media(min-width:901px){
+  .account-widget-slot-mobile{display:none;}
+}
+
+/* ---------------------------------------------------------------
+   Foto de perfil opcional (Meu Perfil)
+   --------------------------------------------------------------- */
+.student-avatar{overflow:hidden;}
+.student-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+/* Mesma classe de bug de especificidade CSS corrigida em outros pontos
+   (ver .account-fab-avatar img[hidden] acima): reforça [hidden] aqui
+   também, já que "hidden" na foto de perfil é alternado por JS sempre
+   que não há foto ou ao remover a foto. */
+.student-avatar img[hidden]{display:none!important;}
+.student-avatar-lg{width:76px;height:76px;font-size:22px;flex-shrink:0;}
+.student-photo-block{display:flex;align-items:center;gap:18px;margin-bottom:10px;}
+.student-photo-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.student-file-label{position:relative;margin-top:0;}
+.student-file-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.student-file-label:focus-within{outline:3px solid var(--gold-500,#b78500);outline-offset:2px;}
+@media(max-width:560px){.student-photo-block{flex-wrap:wrap;}}

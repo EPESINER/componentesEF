@@ -35,14 +35,52 @@
   }
   window.caefActivateTab = activateTab;
 
+  /* ---------------------------------------------------------------
+     MENU MOBILE — botão real (substitui o par checkbox+label antigo,
+     que nunca era alcançável por teclado: o checkbox ficava fora da
+     árvore de foco por display:none, e o <label> não tinha tabindex
+     nem respondia a Enter/Espaço). Um único acionador, sem estado
+     concorrente: o próprio botão guarda o estado em aria-expanded e
+     na classe "nav-open" do cabeçalho. */
+  var siteNav = document.querySelector('.site-nav');
+  var navToggle = document.getElementById('navToggle');
+
+  function isMobileMenuOpen(){
+    return !!(siteNav && siteNav.classList.contains('nav-open'));
+  }
+  function closeMobileMenu(){
+    if (!siteNav || !navToggle || !isMobileMenuOpen()) return;
+    siteNav.classList.remove('nav-open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Abrir menu');
+  }
+  function openMobileMenu(){
+    if (!siteNav || !navToggle) return;
+    siteNav.classList.add('nav-open');
+    navToggle.setAttribute('aria-expanded', 'true');
+    navToggle.setAttribute('aria-label', 'Fechar menu');
+  }
+  if (navToggle){
+    /* <button> nativo: clique (mouse e toque) e Enter/Espaço via
+       teclado já disparam "click" sem nenhum código extra. */
+    navToggle.addEventListener('click', function(){
+      if (isMobileMenuOpen()) closeMobileMenu(); else openMobileMenu();
+    });
+  }
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && isMobileMenuOpen()){
+      closeMobileMenu();
+      navToggle.focus();
+    }
+  });
+
   document.addEventListener('click', function(e){
     var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
     if (!a) return;
     var id = a.getAttribute('href').slice(1);
     var openGroup = a.closest('.nav-group');
     if (openGroup) openGroup.open = false;
-    var navCheck = document.getElementById('navCheck');
-    if (navCheck) navCheck.checked = false;
+    closeMobileMenu();
     if (id && tabIds.indexOf(id) !== -1){
       e.preventDefault();
       activateTab(id);
@@ -53,6 +91,48 @@
       if (target && !tabIds.length){
         e.preventDefault();
         target.scrollIntoView({behavior:'smooth'});
+      } else if (id === 'sobre-portal' && target){
+        /* Os dois links para a Central do Estudante dentro da própria
+           Home ("Conhecer o portal" no herói e o link da dica do
+           guia) usam o salto nativo do navegador — a rolagem até lá
+           já funciona corretamente hoje, inclusive respeitando
+           "movimento reduzido" (scroll-behavior em css/style.css).
+           Por isso NÃO usamos preventDefault aqui: a rolagem nativa
+           continua exatamente como antes. Só faltava o foco seguir
+           para o destino, como acontece no resto da navegação do
+           site — é só isso que este trecho adiciona. */
+        if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+        target.focus({preventScroll: true});
+      } else if (target){
+        /* Link interno para um elemento que mora DENTRO de uma aba
+           (um cartão de trilha, por exemplo) — não a aba inteira.
+           Casos: os 5 links "Ver a trilha completa" do resultado do
+           Quiz, e os links de Atividades para cartões de Trilhas
+           CCHLA. Tratamento único e genérico (não específico do
+           Quiz): se o destino está dentro de um .tab-panel que não
+           é a aba ativa hoje, ativa essa aba primeiro (mesmo
+           mecanismo de activateTab usado em todo o site) e só então
+           leva foco e rolagem até o cartão — mesma técnica já usada
+           pela Busca Geral (focusDestino) e pela busca interna do
+           Ensino (jumpTo): tabindex="-1" + foco sem rolar o próprio
+           foco + scrollIntoView central + destaque .search-jump. */
+        var hostPanel = target.closest('.tab-panel');
+        if (hostPanel && tabIds.indexOf(hostPanel.id) !== -1){
+          e.preventDefault();
+          activateTab(hostPanel.id, {silent:true});
+          setTimeout(function(){
+            if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+            target.focus({preventScroll: true});
+            var reduzMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (target.scrollIntoView){
+              try{ target.scrollIntoView({behavior: reduzMovimento ? 'auto' : 'smooth', block: 'center'}); }
+              catch(err){ target.scrollIntoView(); }
+            }
+            target.classList.remove('search-jump');
+            void target.offsetWidth;
+            target.classList.add('search-jump');
+          }, 30);
+        }
       }
     }
   });
@@ -66,6 +146,28 @@
   document.addEventListener('click', function(e){
     if (e.target.closest('.nav-group')) return;
     navGroups.forEach(function(g){ g.open = false; });
+  });
+
+  /* Teclado nos dropdowns do menu (Ensino/Pesquisa/Serviços):
+     - Esc fecha o dropdown aberto e devolve o foco ao <summary> que o
+       abriu (sem isso, Esc não fazia nada — comportamento nativo do
+       <details>, sem tratamento próprio).
+     - Sair do dropdown por Tab (ou Shift+Tab) fecha o dropdown sem
+       interceptar a tecla: o navegador já decide para onde o foco vai
+       a seguir, isto só fecha o que ficou para trás. Tabular ENTRE os
+       itens de um mesmo dropdown aberto não o fecha. */
+  navGroups.forEach(function(group){
+    var summary = group.querySelector('summary');
+    group.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && group.open){
+        e.preventDefault();
+        group.open = false;
+        if (summary) summary.focus();
+      }
+    });
+    group.addEventListener('focusout', function(e){
+      if (group.open && !group.contains(e.relatedTarget)) group.open = false;
+    });
   });
 
   (function initTab(){
@@ -211,6 +313,7 @@
     var levelBachTotal = document.getElementById('levelBachTotal');
     var levelLicTotal = document.getElementById('levelLicTotal');
     var pills = document.querySelectorAll('.level-pill');
+    var levelStatus = document.getElementById('levelCompareStatus');
     function renderLevel(n){
       var b = LEVELS.bach[n], l = LEVELS.lic[n];
       levelBachEl.innerHTML = b.items.map(function(it){ return '<li>'+it[0]+'<span>'+it[1]+'</span></li>'; }).join('');
@@ -219,8 +322,14 @@
     }
     pills.forEach(function(p){
       p.addEventListener('click', function(){
-        pills.forEach(function(x){ x.classList.remove('active'); });
-        p.classList.add('active'); renderLevel(p.dataset.level);
+        pills.forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
+        p.classList.add('active'); p.setAttribute('aria-pressed', 'true');
+        renderLevel(p.dataset.level);
+        /* Único anúncio curto por seleção — mesmo espírito do
+           aria-live do Quiz (#quizStepText): não lê a lista inteira
+           de disciplinas de novo, só confirma que a comparação foi
+           atualizada e para qual período. */
+        if (levelStatus) levelStatus.textContent = 'Comparativo atualizado: ' + p.textContent.trim() + ' período — Bacharelado e Licenciatura.';
       });
     });
     if (pills.length) renderLevel('1');
@@ -277,12 +386,51 @@
      RADAR CAEF — motor de busca/filtro de oportunidades
      --------------------------------------------------------------- */
   var radarGrid = document.getElementById('radarGrid');
-  if (radarGrid && typeof OPORTUNIDADES !== 'undefined'){
-    /* Segurança informacional: só publica no Radar quem tem
-       authorized === true de forma explícita. Um item sem o campo
-       preenchido (ex.: esquecido ao copiar um modelo) fica de fora
-       por padrão, em vez de aparecer por engano. */
-    var ALL = OPORTUNIDADES.filter(function(o){ return o.authorized === true; });
+  /* V28 — segurança: todo texto vindo dos dados do Radar passa por aqui
+     antes de entrar em innerHTML (antes: interpolação direta, sem
+     tratamento — risco real de XSS assim que o conteúdo passasse a ser
+     editável pelo Painel de Gestão). Aplicado sempre, tanto com os dados
+     estáticos quanto com o Supabase — os dados estáticos já eram
+     confiáveis (só um desenvolvedor editava o arquivo), mas a mesma
+     função protege os dois casos sem precisar de dois caminhos de
+     código diferentes. */
+  function escapeRadarHtml(str){
+    if (str === undefined || str === null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  /* Só aceita URLs http/https explícitas — nunca "javascript:", "data:"
+     ou qualquer outro esquema, e nunca um valor vazio tratado como link
+     válido. */
+  function validarLinkRadar(url){
+    if (!url) return '';
+    var s = String(url).trim();
+    return /^https?:\/\//i.test(s) ? s : '';
+  }
+  function showRadarIndisponivel(){
+    if (!radarGrid) return;
+    radarGrid.innerHTML = '<div class="opp-empty"><h4>Radar CAEF indisponível no momento</h4><p>Não foi possível carregar as oportunidades agora. Isso não significa que não existam vagas — tente novamente em instantes.</p></div>';
+    var radarCountEl = document.getElementById('radarCount');
+    if (radarCountEl) radarCountEl.textContent = 'Indisponível no momento';
+    var mobileCountEl = document.getElementById('radarMobileCount');
+    if (mobileCountEl) mobileCountEl.textContent = 'Indisponível';
+    window.caefOportunidadesAutorizadas = [];
+    window.caefOpenOportunidade = function(){};
+    /* V28 — distingue "falha ao carregar" de "carregado e vazio de
+       verdade" para quem consome window.caefOportunidadesAutorizadas
+       fora deste arquivo (ex.: Busca Geral). caefRadarCarregado marca
+       que uma tentativa terminou (sucesso ou falha); caefRadarIndisponivel
+       diferencia qual dos dois casos foi. */
+    window.caefRadarCarregado = true;
+    window.caefRadarIndisponivel = true;
+    window.dispatchEvent(new CustomEvent('caef:conteudo-atualizado', {detail:{tipo:'radar'}}));
+  }
+  function initRadar(ALL){
+    if (!radarGrid) return;
     var radarSearch = document.getElementById('radarSearch');
     var radarCount = document.getElementById('radarCount');
     var filterTypeWrap = document.getElementById('filterType');
@@ -320,7 +468,12 @@
         var count = ALL.filter(function(o){ return container.dataset.field === 'type' ? o.type === v : (container.dataset.field === 'avail' ? o.status.availability === v : (container.dataset.field === 'shift' ? (o.shifts||[]).indexOf(v)!==-1 : o.area === v)); }).length;
         var label = document.createElement('label');
         label.className = 'filter-opt';
-        label.innerHTML = '<input type="checkbox" value="'+v+'"><span>'+labelFn(v)+'</span><span class="fc">'+count+'</span>';
+        // V28 — segurança: "área" e "turno" vêm dos dados (agora
+        // potencialmente editáveis pelo Painel de Gestão), então precisam
+        // do mesmo tratamento contra XSS já aplicado ao resto do Radar.
+        // "value" do checkbox usa o texto de fato (não HTML), então o
+        // valor real do filtro continua intacto — só a exibição é escapada.
+        label.innerHTML = '<input type="checkbox" value="'+escapeRadarHtml(v)+'"><span>'+escapeRadarHtml(labelFn(v))+'</span><span class="fc">'+count+'</span>';
         container.appendChild(label);
       });
     }
@@ -366,14 +519,14 @@
       if (o.workload) meta.push(o.workload);
       if (o.dedication) meta.push(o.dedication);
       return ''+
-        '<button class="opp-card" type="button" data-id="'+o.id+'">'+
+        '<button class="opp-card" type="button" data-id="'+escapeRadarHtml(o.id)+'">'+
           '<div class="opp-top">'+
-            '<span class="opp-type '+typeClass+'">'+(TYPE_LABEL[o.type]||o.type)+'</span>'+
-            '<span class="opp-status '+statusDotClass(o.status.availability)+'"><i class="dot"></i>'+statusText(o.status.availability,o.status.note)+'</span>'+
+            '<span class="opp-type '+escapeRadarHtml(typeClass)+'">'+escapeRadarHtml(TYPE_LABEL[o.type]||o.type)+'</span>'+
+            '<span class="opp-status '+statusDotClass(o.status.availability)+'"><i class="dot"></i>'+escapeRadarHtml(statusText(o.status.availability,o.status.note))+'</span>'+
           '</div>'+
-          '<h3>'+(o.shortTitle||o.title)+'</h3>'+
-          '<div class="opp-area">'+(o.area||'')+(o.coordinator?' · '+o.coordinator:'')+'</div>'+
-          (meta.length ? '<div class="opp-meta">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>' : '')+
+          '<h3>'+escapeRadarHtml(o.shortTitle||o.title)+'</h3>'+
+          '<div class="opp-area">'+escapeRadarHtml(o.area||'')+(o.coordinator?' · '+escapeRadarHtml(o.coordinator):'')+'</div>'+
+          (meta.length ? '<div class="opp-meta">'+meta.map(function(m){return '<span>'+escapeRadarHtml(m)+'</span>';}).join('')+'</div>' : '')+
           '<div class="opp-cta">Ver oportunidade →</div>'+
         '</button>';
     }
@@ -439,37 +592,68 @@
     var overlay = document.getElementById('detailOverlay');
     var panel = document.getElementById('detailPanel');
     var detailBody = document.getElementById('detailBody');
+    var detailCloseBtn = document.getElementById('detailClose');
+    var lastFocused = null;
 
-    function field(label, value){
-      if (!value) return '';
-      return '<div class="detail-field"><dt>'+label+'</dt><dd>'+value+'</dd></div>';
+    function field(label, valueHtml){
+      // valueHtml já vem pronto para inserção (texto simples escapado
+      // pelo chamador, ou um pequeno HTML de confiança montado por esta
+      // mesma função — nunca texto bruto do banco sem passar por
+      // escapeRadarHtml antes de chegar aqui).
+      if (!valueHtml) return '';
+      return '<div class="detail-field"><dt>'+escapeRadarHtml(label)+'</dt><dd>'+valueHtml+'</dd></div>';
+    }
+
+    /* Mesma técnica já usada nos painéis da Busca Geral e da Gestão
+       para conter o Tab dentro do diálogo aberto: lista os controles
+       focáveis do painel a cada tecla, sempre recalculada (o conteúdo
+       do painel muda a cada oportunidade aberta). */
+    function getFocusable(){
+      return Array.prototype.filter.call(
+        panel.querySelectorAll('a,button,input,[tabindex]:not([tabindex="-1"])'),
+        function(el){ return !el.hidden && el.offsetParent !== null; }
+      );
+    }
+
+    /* Um elemento só é um destino de foco válido para devolver o foco
+       ao fechar se ainda estiver de verdade na página e visível — o
+       clique pode ter vindo de um cartão que a listagem já substituiu
+       (filtro mudou enquanto o painel estava aberto) ou de um momento
+       em que o foco real já não estava em lugar nenhum específico
+       (ex.: logo depois que a Busca Geral fecha o próprio painel,
+       antes de abrir este). Nesses casos não presumimos que o cartão
+       de oportunidade ainda é o "acionador real". */
+    function isValidReturnTarget(el){
+      return !!(el && typeof el.focus === 'function' && document.body.contains(el) && el.offsetParent !== null);
     }
 
     function openDetail(id){
       var o = ALL.filter(function(x){return x.id===id;})[0];
       if (!o) return;
-      var html = '<h2>'+o.title+'</h2>'+
+      var linkSelecaoValido = validarLinkRadar(o.selectionLink);
+      var selecaoHtml = escapeRadarHtml(o.selection||'') + (linkSelecaoValido ? ' — <a href="'+escapeRadarHtml(linkSelecaoValido)+'" target="_blank" rel="noopener">acessar formulário</a>' : '');
+      var html = '<h2>'+escapeRadarHtml(o.title)+'</h2>'+
         '<div class="opp-top" style="margin-bottom:16px;">'+
-          '<span class="opp-type '+o.type+'">'+(TYPE_LABEL[o.type]||o.type)+'</span>'+
-          '<span class="opp-status '+statusDotClass(o.status.availability)+'"><i class="dot"></i>'+statusText(o.status.availability,o.status.note)+'</span>'+
+          '<span class="opp-type '+escapeRadarHtml(o.type)+'">'+escapeRadarHtml(TYPE_LABEL[o.type]||o.type)+'</span>'+
+          '<span class="opp-status '+statusDotClass(o.status.availability)+'"><i class="dot"></i>'+escapeRadarHtml(statusText(o.status.availability,o.status.note))+'</span>'+
         '</div>'+
-        field('Área', o.area) +
-        field('Laboratório / grupo', o.labName) +
-        field('Coordenação', o.coordinator) +
-        field('Contato', o.contact) +
-        field('Descrição', o.description) +
-        field('Público', o.audience) +
-        field('Modalidade de participação', o.participationType) +
-        field('Modalidades de ingresso', o.modalities ? o.modalities.join(', ') : '') +
-        field('Carga horária', o.workload) +
-        field('Dedicação semanal', o.dedication) +
-        field('Turno', (o.shifts||[]).join(', ')) +
-        field('Nível', o.level ? o.level.join(', ') : '') +
-        field('Pré-requisitos', o.requirements) +
-        field('Processo seletivo', o.selection + (o.selectionLink ? ' — <a href="'+o.selectionLink+'" target="_blank" rel="noopener">acessar formulário</a>' : '')) +
-        field('Duração prevista', o.duration) +
+        field('Área', escapeRadarHtml(o.area)) +
+        field('Laboratório / grupo', escapeRadarHtml(o.labName)) +
+        field('Coordenação', escapeRadarHtml(o.coordinator)) +
+        field('Contato', escapeRadarHtml(o.contact)) +
+        field('Descrição', escapeRadarHtml(o.description)) +
+        field('Público', escapeRadarHtml(o.audience)) +
+        field('Modalidade de participação', escapeRadarHtml(o.participationType)) +
+        field('Modalidades de ingresso', o.modalities ? escapeRadarHtml(o.modalities.join(', ')) : '') +
+        field('Carga horária', escapeRadarHtml(o.workload)) +
+        field('Dedicação semanal', escapeRadarHtml(o.dedication)) +
+        field('Turno', escapeRadarHtml((o.shifts||[]).join(', '))) +
+        field('Nível', o.level ? escapeRadarHtml(o.level.join(', ')) : '') +
+        field('Pré-requisitos', escapeRadarHtml(o.requirements)) +
+        field('Processo seletivo', o.selection ? selecaoHtml : '') +
+        field('Duração prevista', escapeRadarHtml(o.duration)) +
         field('Vínculo com pós-graduação', o.postgrad === true ? 'Sim' : (o.postgrad === false ? 'Não' : '')) +
-        '<p class="detail-updated">Atualizado em: '+(o.lastUpdated||'não informado')+'. Informação organizada pelo CAEF a partir de mapeamento direto com o(a) coordenador(a). Confirme os detalhes finais com o responsável.</p>'+
+        '<p class="detail-updated">Atualizado em: '+escapeRadarHtml(o.lastUpdated||'não informado')+'. Informação organizada pelo CAEF a partir de mapeamento direto com o(a) coordenador(a). Confirme os detalhes finais com o responsável.</p>'+
         '<button type="button" class="detail-share" id="detailShare">Compartilhar oportunidade ↗</button><p class="detail-share-feedback" id="detailShareFeedback" role="status" aria-live="polite"></p>';
       detailBody.innerHTML = html;
       document.getElementById('detailShare').addEventListener('click',function(){
@@ -488,16 +672,67 @@
           feedback.insertAdjacentText('afterbegin','Copie este endereço: ');
         }
       });
+      lastFocused = document.activeElement;
+      panel.inert = false;
       overlay.classList.add('open'); panel.classList.add('open');
       document.body.style.overflow = 'hidden';
+      /* Foco inicial dentro do diálogo ao abrir (mesmo padrão do
+         painel da Gestão): sem isso, quem abre por teclado ou usa
+         leitor de tela não tinha nenhum sinal de que um diálogo modal
+         apareceu, e ainda precisaria tabular por conta própria até
+         alcançá-lo. O atraso deixa o painel sair do estado inert antes
+         de tentar focar algo dentro dele. */
+      setTimeout(function(){ if (panel.classList.contains('open')) detailCloseBtn.focus(); }, 10);
     }
     function closeDetail(){
+      if (!panel.classList.contains('open')) return;
       overlay.classList.remove('open'); panel.classList.remove('open');
       document.body.style.overflow = '';
+      /* Devolve o foco ao elemento que abriu o detalhe, quando ele
+         ainda existe e está acessível (o caso comum: o cartão da
+         oportunidade clicado ou focado por teclado). Quando não é o
+         caso — por exemplo, o detalhe foi aberto a partir de um
+         resultado da Busca Geral, cujo painel já fechou e ficou inert
+         antes deste abrir — não tenta focar nada dentro do painel de
+         busca fechado; em vez disso vai para um destino visível e
+         lógico: a própria seção do Radar, que já está em exibição. */
+      var destino = isValidReturnTarget(lastFocused) ? lastFocused : null;
+      lastFocused = null;
+      if (destino){
+        destino.focus();
+      } else {
+        var secaoRadar = document.getElementById('radar');
+        if (secaoRadar){
+          if (!secaoRadar.hasAttribute('tabindex')) secaoRadar.setAttribute('tabindex', '-1');
+          secaoRadar.focus({ preventScroll: true });
+        }
+      }
+      /* Mesma correção já aplicada aos painéis da Busca Geral e da
+         Gestão nesta etapa: sem isso, o botão de fechar e os demais
+         controles deste painel continuavam alcançáveis por Tab mesmo
+         com o painel fora da tela (fechado só visualmente, por
+         transform), travando a navegação por teclado nesse ponto. */
+      if (panel.contains(document.activeElement) && document.activeElement.blur) document.activeElement.blur();
+      panel.inert = true;
     }
     overlay.addEventListener('click', closeDetail);
-    document.getElementById('detailClose').addEventListener('click', closeDetail);
+    detailCloseBtn.addEventListener('click', closeDetail);
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeDetail(); });
+
+    /* Contenção de foco dentro do diálogo aberto (role="dialog"
+       aria-modal="true"): Tab no último controle volta ao primeiro,
+       Shift+Tab no primeiro vai para o último — o teclado nunca
+       alcança o conteúdo de fundo enquanto o painel está aberto.
+       Mesmo padrão já usado nos painéis da Busca Geral e da Gestão. */
+    panel.addEventListener('keydown', function(e){
+      if (!panel.classList.contains('open')) return;
+      if (e.key !== 'Tab') return;
+      var focusable = getFocusable();
+      if (!focusable.length) return;
+      var first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    });
 
     render();
     var linkedId = new URLSearchParams(window.location.search).get('oportunidade');
@@ -517,11 +752,92 @@
        por conta própria. */
     window.caefOportunidadesAutorizadas = ALL;
     window.caefOpenOportunidade = function(id){
+      /* Lê ALL no momento da chamada (closure), não no momento em que
+         esta função foi criada — então continua funcionando mesmo
+         depois de uma atualização de dados via atualizarDadosRadar. */
       if (!ALL.some(function(o){ return o.id === id; })) return;
       activateTab('radar', {silent:true});
       openDetail(id);
     };
+    window.caefRadarCarregado = true;
+    window.caefRadarIndisponivel = false;
+
+    /* V28 — item 1: permite atualizar os dados do Radar (nova
+       publicação, edição, arquivamento ou exclusão feita no Painel de
+       Gestão) sem recarregar a página e SEM reanexar os listeners de
+       filtro/busca já registrados acima (o que causaria duplicação a
+       cada atualização). Reatribui a mesma variável ALL que todas as
+       funções deste bloco já leem por closure (buildFilterGroup,
+       matchesFilters, render, openDetail, window.caefOpenOportunidade
+       acima) — então todas passam a enxergar os dados novos
+       automaticamente, sem precisar recriar nada. */
+    function atualizarDadosRadar(novoALL){
+      ALL = novoALL;
+      buildFilterGroup(filterTypeWrap, uniqueSorted(ALL.map(function(o){return o.type;})), function(v){ return TYPE_LABEL[v] || v; });
+      buildFilterGroup(filterShiftWrap, uniqueSorted([].concat.apply([], ALL.map(function(o){return o.shifts||[];}))), function(v){ return v; });
+      buildFilterGroup(filterAvailWrap, uniqueSorted(ALL.map(function(o){return o.status.availability;})), function(v){ return AVAIL_LABEL[v] || v; });
+      buildFilterGroup(filterAreaWrap, uniqueSorted(ALL.map(function(o){return o.area;}).filter(Boolean)), function(v){ return v; });
+      render();
+      window.caefOportunidadesAutorizadas = ALL;
+      window.caefRadarCarregado = true;
+      window.caefRadarIndisponivel = false;
+      window.dispatchEvent(new CustomEvent('caef:conteudo-atualizado', {detail:{tipo:'radar'}}));
+    }
+    radarAtualizarDados = atualizarDadosRadar;
+    window.dispatchEvent(new CustomEvent('caef:conteudo-atualizado', {detail:{tipo:'radar'}}));
   }
+
+  /* V28 — escolhe a fonte de dados do Radar: Supabase (quando a flag de
+     conteúdo está ligada) ou o arquivo estático js/data/oportunidades.js
+     (comportamento idêntico à V27). Nunca as duas ao mesmo tempo, nunca
+     conteúdo duplicado — e se a fonte Supabase falhar, mostra um estado
+     de indisponibilidade claro, nunca dados antigos como se fossem
+     atuais. */
+  /* V28 — item 1: radarInicializado/radarAtualizarDados permitem que
+     bootstrapRadar() seja chamado de novo (ver window.caefRefreshRadar,
+     usado pelo Painel de Gestão após publicar/editar/arquivar/excluir)
+     sem reexecutar todo o initRadar — que reanexaria os listeners de
+     filtro e busca a cada chamada. Na primeira vez, roda o setup
+     completo; nas seguintes, só atualiza os dados exibidos. */
+  var radarInicializado = false;
+  var radarAtualizarDados = null;
+  function bootstrapRadar(){
+    if (!radarGrid) return;
+    function aplicarSucesso(items){
+      if (radarInicializado && radarAtualizarDados){
+        radarAtualizarDados(items);
+      } else {
+        initRadar(items);
+        radarInicializado = true;
+      }
+    }
+    function aplicarFalha(){
+      if (radarInicializado){
+        /* Falha numa ATUALIZAÇÃO (já havia dados carregados com
+           sucesso antes): uma falha passageira não apaga o que já
+           estava funcionando na tela — só registra o problema. */
+        console.warn('[Radar CAEF] Falha ao atualizar o Radar — mantendo os dados já carregados.');
+        return;
+      }
+      showRadarIndisponivel();
+    }
+    if (window.CAEF_CONTENT_CONFIG && window.CAEF_CONTENT_CONFIG.useSupabaseContent && window.caefContentSource){
+      window.caefContentSource.getRadarAutorizados().then(aplicarSucesso)['catch'](aplicarFalha);
+    } else if (typeof OPORTUNIDADES !== 'undefined'){
+      /* Segurança informacional: só publica no Radar quem tem
+         authorized === true de forma explícita. Um item sem o campo
+         preenchido (ex.: esquecido ao copiar um modelo) fica de fora
+         por padrão, em vez de aparecer por engano. */
+      aplicarSucesso(OPORTUNIDADES.filter(function(o){ return o.authorized === true; }));
+    }
+  }
+  bootstrapRadar();
+  /* Exposta para o Painel de Gestão chamar após qualquer operação bem-
+     sucedida (publicar, editar, arquivar, excluir), para refletir a
+     mudança no próprio portal sem recarregar a página. Só tem efeito
+     quando useSupabaseContent=true (com os dados estáticos, o Painel
+     de Gestão não realiza essas operações). */
+  window.caefRefreshRadar = bootstrapRadar;
 
   /* ---------------------------------------------------------------
      PESQUISA — lista de laboratórios
@@ -585,39 +901,52 @@
      MURAL DE AVISOS
      --------------------------------------------------------------- */
   var muralWrap = document.getElementById('muralWrap');
-  if (muralWrap && typeof AVISOS !== 'undefined'){
-    function escapeAvisoHtml(str){
-      if (str === undefined || str === null) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-    function parseDataBR(str){
-      if (!str) return null;
-      var partes = str.split('/');
-      if (partes.length !== 3) return null;
-      var d = new Date(partes[2], partes[1]-1, partes[0]);
-      return isNaN(d.getTime()) ? null : d;
-    }
-    var hojeMural = new Date();
-    var avisosPublicados = AVISOS.filter(function(a){
-      if (a.situacaoPublicacao !== 'publicado') return false;
-      var validade = parseDataBR(a.validoAte);
-      if (validade){
-        validade.setHours(23,59,59,999);
-        if (hojeMural > validade) return false;
-      }
-      return true;
-    });
+  function escapeAvisoHtml(str){
+    if (str === undefined || str === null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  function parseDataBR(str){
+    if (!str) return null;
+    var partes = String(str).split('/');
+    if (partes.length !== 3) return null;
+    var d = new Date(partes[2], partes[1]-1, partes[0]);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  function showMuralIndisponivel(){
+    if (!muralWrap) return;
+    muralWrap.innerHTML = '<div class="empty-state"><h4>Mural de Avisos indisponível no momento</h4><p>Não foi possível carregar os avisos agora. Isso não significa que não haja comunicados novos — tente novamente em instantes.</p></div>';
+    window.caefAvisosPublicados = [];
+    /* V28 — item 1: distingue "falha ao carregar" de "carregado e
+       vazio de verdade" para quem consome window.caefAvisosPublicados
+       fora deste arquivo (Área do Estudante, "Avisos recentes", Busca
+       Geral). caefAvisosCarregado marca que uma tentativa terminou
+       (sucesso ou falha); caefAvisosIndisponivel diferencia qual dos
+       dois casos foi — um array vazio sozinho não permite essa
+       distinção. */
+    window.caefAvisosCarregado = true;
+    window.caefAvisosIndisponivel = true;
+    window.dispatchEvent(new CustomEvent('caef:conteudo-atualizado', {detail:{tipo:'avisos'}}));
+  }
+  function initMural(avisosPublicados){
+    if (!muralWrap) return;
     if (!avisosPublicados.length){
       muralWrap.innerHTML = '<div class="empty-state"><h4>Nenhum aviso publicado no momento</h4><p>Novos comunicados da Diretoria Geral do CAEF aparecem aqui assim que forem avaliados e aprovados para publicação.</p></div>';
     } else {
       muralWrap.innerHTML = avisosPublicados.map(function(a){
+        // V28: imagem opcional — avisos sem imagem (a imensa maioria,
+        // incluindo todo o conteúdo migrado da V27) continuam exatamente
+        // como antes, sem nenhuma alteração de layout.
+        var imagemHtml = a.imagemUrl
+          ? '<img class="formation-card-img" src="'+escapeAvisoHtml(a.imagemUrl)+'" alt="'+escapeAvisoHtml(a.imagemAlt||'')+'" loading="lazy">'
+          : '';
         return '<div class="formation-card" id="aviso-'+escapeAvisoHtml(a.id)+'">'+
           '<span class="formation-badge">AVISO</span>'+
+          imagemHtml+
           '<div style="flex:1;">'+
             '<div class="kicker" style="margin-bottom:4px;">'+escapeAvisoHtml(a.origem)+'</div>'+
             '<h3 style="font-family:var(--font-display);text-transform:uppercase;color:var(--green-900);margin:0 0 8px;font-size:19px;">'+escapeAvisoHtml(a.titulo)+'</h3>'+
@@ -629,6 +958,58 @@
         '</div>';
       }).join('');
     }
+    /* Exposição controlada para a Busca Geral (Etapa 4 — Fase 2): a
+       busca lê exatamente esta lista, já filtrada por situação de
+       publicação e validade — nunca reimplementa essa regra por
+       conta própria. Se este arquivo não carregar por algum motivo,
+       a busca simplesmente não mostra avisos (ver "typeof" no módulo
+       de busca), em vez de quebrar. */
+    window.caefAvisosPublicados = avisosPublicados;
+    window.caefAvisosCarregado = true;
+    window.caefAvisosIndisponivel = false;
+    /* V28 — item 1: avisa quem depende desta lista (Área do Estudante,
+       "Avisos recentes", Busca Geral) que ela acabou de ser
+       (re)carregada, para que se atualizem sem precisar de reload —
+       tanto na primeira carga quanto numa atualização depois de uma
+       publicação/edição/arquivamento/exclusão feita no Painel de
+       Gestão. */
+    window.dispatchEvent(new CustomEvent('caef:conteudo-atualizado', {detail:{tipo:'avisos'}}));
+  }
+  /* V28 — item 1: muralInicializado evita que uma falha numa
+     ATUALIZAÇÃO (chamada via window.caefRefreshMural, depois que o
+     Mural já carregou com sucesso uma vez) apague avisos que já
+     estavam exibidos corretamente — só a falha na carga INICIAL mostra
+     o estado "indisponível". Ao contrário do Radar, initMural() não
+     anexa listeners persistentes a elementos fora do próprio
+     muralWrap, então pode ser chamado de novo com segurança sem o
+     mesmo cuidado de separar "setup" de "atualização". */
+  var muralInicializado = false;
+  function bootstrapMural(){
+    if (!muralWrap) return;
+    if (window.CAEF_CONTENT_CONFIG && window.CAEF_CONTENT_CONFIG.useSupabaseContent && window.caefContentSource){
+      window.caefContentSource.getAvisosPublicados().then(function(avisos){
+        initMural(avisos);
+        muralInicializado = true;
+      })['catch'](function(){
+        if (muralInicializado){
+          console.warn('[Mural de Avisos] Falha ao atualizar o Mural — mantendo os avisos já carregados.');
+          return;
+        }
+        showMuralIndisponivel();
+      });
+      return;
+    }
+    if (typeof AVISOS === 'undefined') return;
+    var hojeMural = new Date();
+    var avisosPublicados = AVISOS.filter(function(a){
+      if (a.situacaoPublicacao !== 'publicado') return false;
+      var validade = parseDataBR(a.validoAte);
+      if (validade){
+        validade.setHours(23,59,59,999);
+        if (hojeMural > validade) return false;
+      }
+      return true;
+    });
     /* Sinalização apenas para manutenção (console do navegador) — nunca
        exibida ao público — quando um aviso publicado passa da própria
        data de revisão editorial sem confirmação. */
@@ -639,14 +1020,16 @@
         console.warn('[Mural de Avisos] O aviso "'+a.titulo+'" passou da data de revisão editorial ('+a.revisaoEditorial+'). Confirme com a Diretoria Geral do CAEF se a orientação ainda está vigente antes de manter, atualizar ou arquivar o comunicado.');
       }
     });
-    /* Exposição controlada para a Busca Geral (Etapa 4 — Fase 2): a
-       busca lê exatamente esta lista, já filtrada por situação de
-       publicação e validade — nunca reimplementa essa regra por
-       conta própria. Se este arquivo não carregar por algum motivo,
-       a busca simplesmente não mostra avisos (ver "typeof" no módulo
-       de busca), em vez de quebrar. */
-    window.caefAvisosPublicados = avisosPublicados;
+    initMural(avisosPublicados);
+    muralInicializado = true;
   }
+  bootstrapMural();
+  /* Exposta para o Painel de Gestão chamar após qualquer operação bem-
+     sucedida sobre avisos (publicar, editar, arquivar, excluir,
+     enviar/substituir/remover imagem), para refletir a mudança no
+     próprio portal sem recarregar a página. Só tem efeito quando
+     useSupabaseContent=true. */
+  window.caefRefreshMural = bootstrapMural;
 
   /* ---------------------------------------------------------------
      PORTAS ABERTAS
@@ -855,6 +1238,7 @@
       '<p style="margin:0;color:var(--ink-muted);font-size:14.5px;">'+escapeGestaoHtml(m.funcao)+'</p>'+
       '<p class="gestao-detail-note">O CAEF é uma iniciativa estudantil do curso de Educação Física — não é um canal oficial da UFPB.</p>';
     lastFocused = document.activeElement;
+    panel.inert = false;
     overlay.classList.add('open');
     panel.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -870,6 +1254,14 @@
     setBackgroundInert(false);
     if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
     lastFocused = null;
+    if (panel.contains(document.activeElement) && document.activeElement.blur) document.activeElement.blur();
+    /* Mesma correção já aplicada ao painel da Busca Geral nesta rodada:
+       sem isso, o botão de fechar deste painel continuava alcançável
+       por Tab mesmo fechado, e o handler de Tab abaixo prendia o foco
+       nele para sempre — travando a navegação por teclado do restante
+       da página. Necessário para o teste de navegação só por teclado
+       (item 8 da aprovação) conseguir chegar ao rodapé. */
+    panel.inert = true;
   }
 
   wrap.addEventListener('click', function(e){
@@ -885,6 +1277,7 @@
   });
 
   panel.addEventListener('keydown', function(e){
+    if (!panel.classList.contains('open')) return;
     if (e.key !== 'Tab') return;
     var focusable = getFocusable();
     if (!focusable.length) return;
@@ -1144,30 +1537,41 @@
   'use strict';
   var wrap=document.getElementById('nowAvisosList');
   if(!wrap)return;
-  var lista=window.caefAvisosPublicados;
-  wrap.innerHTML='';
-  if(!lista||!lista.length){
-    var empty=document.createElement('p');
-    empty.className='now-avisos-empty';
-    empty.textContent='Nenhum aviso publicado no momento.';
-    wrap.appendChild(empty);
-    return;
+  /* V28 — item 1: virou função reaproveitável, chamada tanto na carga
+     inicial quanto sempre que window.caefAvisosPublicados é
+     (re)carregado (evento "caef:conteudo-atualizado", tipo "avisos") —
+     assim uma publicação, edição, arquivamento ou exclusão feita no
+     Painel de Gestão aparece aqui sem precisar recarregar a página. */
+  function render(){
+    var lista=window.caefAvisosPublicados;
+    wrap.innerHTML='';
+    if(!lista||!lista.length){
+      var empty=document.createElement('p');
+      empty.className='now-avisos-empty';
+      empty.textContent='Nenhum aviso publicado no momento.';
+      wrap.appendChild(empty);
+      return;
+    }
+    lista.slice(0,2).forEach(function(a){
+      var card=document.createElement('a');
+      card.className='now-aviso-card';
+      card.href='#mural';
+      var h4=document.createElement('h4');
+      h4.textContent=a.titulo||'';
+      var p=document.createElement('p');
+      p.textContent=a.texto||'';
+      var origem=document.createElement('span');
+      origem.className='now-avisos-origem';
+      origem.textContent=(a.origem||'')+' · '+(a.dataOriginal||'');
+      card.appendChild(h4);
+      card.appendChild(p);
+      card.appendChild(origem);
+      wrap.appendChild(card);
+    });
   }
-  lista.slice(0,2).forEach(function(a){
-    var card=document.createElement('a');
-    card.className='now-aviso-card';
-    card.href='#mural';
-    var h4=document.createElement('h4');
-    h4.textContent=a.titulo||'';
-    var p=document.createElement('p');
-    p.textContent=a.texto||'';
-    var origem=document.createElement('span');
-    origem.className='now-avisos-origem';
-    origem.textContent=(a.origem||'')+' · '+(a.dataOriginal||'');
-    card.appendChild(h4);
-    card.appendChild(p);
-    card.appendChild(origem);
-    wrap.appendChild(card);
+  render();
+  window.addEventListener('caef:conteudo-atualizado', function(e){
+    if (e && e.detail && e.detail.tipo === 'avisos') render();
   });
 })();
 
@@ -1348,7 +1752,13 @@
       termos: item.termos || [],
       contexto: externo ? 'Canal do CAEF' : 'Seção do portal',
       tipo: item.tipo,
-      destino: item.destino
+      destino: item.destino,
+      /* Opcional: permite que um item de js/data/busca-secoes.js aponte
+         para um bloco específico dentro da própria seção (mesmo
+         mecanismo de foco/rolagem já usado pelos itens de Fase 2,
+         como um aviso dentro de #mural) — sem precisar ser uma aba
+         própria. Ex.: a Central do Estudante mora dentro de #inicio. */
+      focusId: item.focusId
     };
   }
 
@@ -1450,25 +1860,49 @@
     });
   }
 
-  /* Índice pré-normalizado uma única vez, quando a página carrega (a
-     lista de destinos é pequena; não há necessidade de recalcular
-     isso a cada tecla). Como este bloco é sempre o último a rodar no
-     arquivo (ver o comentário no topo deste módulo), Mural, Radar e
-     Formação já terminaram de expor seus dados antes desta linha
-     rodar — junta tudo numa lista só, sem cadastro duplicado em
-     nenhum lugar. */
-  var todosItens = BUSCA_SECOES.map(normalizarItemSecao)
-    .concat(itensDeAvisos())
-    .concat(itensDeOportunidades())
-    .concat(itensDeFormacao())
-    .concat(itensDeTrilhas());
-  var INDEX = todosItens.map(function(item){
-    return {
-      item: item,
-      tituloPalavras: palavras(normalize(item.titulo)),
-      termosPalavras: palavras(normalize((item.termos || []).join(' '))),
-      resumoPalavras: palavras(normalize(item.resumo))
-    };
+  /* V28 — item 1: o índice já foi montado só UMA VEZ, de forma
+     síncrona, no carregamento da página. Isso quebrava a sincronização
+     quando useSupabaseContent=true: bootstrapMural()/bootstrapRadar()
+     passaram a ser assíncronos (Promise do Supabase), então este
+     índice terminava de montar ANTES de window.caefAvisosPublicados e
+     window.caefOportunidadesAutorizadas chegarem — a Busca Geral ficava
+     permanentemente sem avisos/oportunidades até um reload completo da
+     página. Agora "montarIndice" é uma função reaproveitável: roda uma
+     vez no carregamento (com o que já estiver disponível na hora) e de
+     novo sempre que o Mural ou o Radar (re)carregarem seus dados —
+     inclusive depois de uma publicação, edição, arquivamento ou
+     exclusão feita no próprio Painel de Gestão, sem recarregar a
+     página. Seções/canais (Fase 1) e Trilhas nunca mudam depois do
+     carregamento, então recalculá-los de novo a cada atualização é
+     redundante mas inofensivo — a lista de destinos é pequena. */
+  var todosItens, INDEX;
+  function montarIndice(){
+    todosItens = BUSCA_SECOES.map(normalizarItemSecao)
+      .concat(itensDeAvisos())
+      .concat(itensDeOportunidades())
+      .concat(itensDeFormacao())
+      .concat(itensDeTrilhas());
+    INDEX = todosItens.map(function(item){
+      return {
+        item: item,
+        tituloPalavras: palavras(normalize(item.titulo)),
+        termosPalavras: palavras(normalize((item.termos || []).join(' '))),
+        resumoPalavras: palavras(normalize(item.resumo))
+      };
+    });
+  }
+  montarIndice();
+  /* Reconstrói o índice sempre que o Mural ou o Radar (re)carregam seus
+     dados (evento disparado pelos blocos MURAL DE AVISOS e RADAR CAEF,
+     acima neste arquivo). Se o painel de busca já estiver aberto com
+     um termo digitado, também atualiza os resultados visíveis na hora
+     — sem isso, quem já tinha a busca aberta continuaria vendo
+     resultados desatualizados até fechar e abrir de novo. */
+  window.addEventListener('caef:conteudo-atualizado', function(){
+    montarIndice();
+    if (panel.classList.contains('open') && input.value.trim()){
+      renderResults(input.value);
+    }
   });
 
   /* Relevância: título > termos relacionados > resumo. Cada destino
@@ -1560,6 +1994,10 @@
 
   function openPanel(){
     lastFocused = document.activeElement;
+    /* Antes de tudo: tira o painel do estado inert, para que ele volte
+       a fazer parte da sequência de tabulação e da árvore de
+       acessibilidade assim que passa a estar visível. */
+    panel.inert = false;
     overlay.classList.add('open');
     panel.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1586,8 +2024,26 @@
     document.body.style.overflow = '';
     toggles.forEach(function(b){ b.setAttribute('aria-expanded', 'false'); });
     setBackgroundInert(false);
+    /* Devolve o foco ANTES de tornar o painel inert: um elemento não
+       pode ficar com foco e inert ao mesmo tempo, e o navegador não
+       aceita marcar como inert um elemento que ainda contém o foco. */
     if (returnFocus && lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
     lastFocused = null;
+    /* Quando returnFocus é false, o foco ainda pode estar em algo
+       dentro do painel (ex.: o resultado clicado) neste exato momento
+       — focusDestino só move o foco para o destino real um instante
+       depois (setTimeout). Um elemento não pode ficar com foco e
+       inert ao mesmo tempo, então tiramos o foco de dentro do painel
+       antes de marcá-lo inert; o destino final assume o foco em
+       seguida, normalmente. */
+    if (panel.contains(document.activeElement) && document.activeElement.blur) document.activeElement.blur();
+    /* Painel fechado: sai por completo da sequência de tabulação e da
+       árvore de acessibilidade (não só visualmente, via transform).
+       Sem isso, o botão de fechar e o campo de busca continuavam
+       alcançáveis por Tab mesmo com o painel fora da tela, e o
+       cancelamento de Tab do handler abaixo prendia o foco entre os
+       dois para sempre. */
+    panel.inert = true;
   }
 
   toggles.forEach(function(btn){
@@ -1646,10 +2102,13 @@
       e.preventDefault();
       var oportunidadeId = link.dataset.oportunidadeId;
       closePanel({ returnFocus: false });
+      /* O próprio painel de detalhe do Radar agora cuida do foco
+         inicial ao abrir (foca o botão de fechar) e sabe, ao fechar,
+         que não deve tentar devolver o foco a um resultado que ficou
+         dentro deste painel de busca já fechado e inert — por isso
+         não é mais preciso focar nada aqui manualmente. */
       if (typeof window.caefOpenOportunidade === 'function'){
         window.caefOpenOportunidade(oportunidadeId);
-        var fecharDetalheRadar = document.getElementById('detailClose');
-        if (fecharDetalheRadar) fecharDetalheRadar.focus({ preventScroll: true });
       }
       return;
     }
@@ -1674,6 +2133,11 @@
   });
 
   panel.addEventListener('keydown', function(e){
+    /* Defesa extra: o atributo inert já impede o painel fechado de
+       receber foco (e portanto este handler nem chegaria a rodar a
+       partir dele), mas a checagem explícita documenta a intenção e
+       protege contra qualquer futura mudança que pare de usar inert. */
+    if (!panel.classList.contains('open')) return;
     if (e.key === 'Tab'){
       var focusable = getFocusable();
       if (!focusable.length) return;

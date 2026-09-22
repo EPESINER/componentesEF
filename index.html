@@ -25,7 +25,6 @@
   </div>
 </div>
 
-<input type="checkbox" id="navCheck" class="nav-check">
 <header class="site-nav">
   <div class="nav-inner">
     <a href="#inicio" class="nav-brand" aria-label="CAEF — Página inicial">
@@ -35,8 +34,8 @@
     <button type="button" id="siteSearchToggle" class="nav-search-btn" aria-haspopup="dialog" aria-controls="siteSearchPanel" aria-expanded="false" aria-label="Buscar no portal">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
     </button>
-    <label for="navCheck" class="nav-burger" aria-label="Abrir menu"><span></span><span></span><span></span></label>
-    <div class="nav-menu">
+    <button type="button" id="navToggle" class="nav-burger" aria-haspopup="true" aria-controls="navMenu" aria-expanded="false" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+    <div class="nav-menu" id="navMenu">
       <a href="#inicio" class="nav-single">Início</a>
       <a href="#radar" class="nav-single">Oportunidades</a>
 
@@ -76,14 +75,16 @@
         </div>
       </details>
 
+      <a href="#area-estudante" class="nav-single">Área do Estudante</a>
       <a href="#radar" class="nav-cta">Radar CAEF →</a>
+      <div class="account-widget-slot account-widget-slot-mobile" id="accountWidgetSlotMobile"></div>
     </div>
     </div>
   </div>
 </header>
 
 <div class="detail-overlay" id="siteSearchOverlay"></div>
-<aside class="detail-panel" id="siteSearchPanel" role="dialog" aria-modal="true" aria-labelledby="siteSearchTitle">
+<aside class="detail-panel" id="siteSearchPanel" role="dialog" aria-modal="true" aria-labelledby="siteSearchTitle" inert>
   <div class="detail-head">
     <p class="kicker" id="siteSearchTitle" style="margin:0;">Buscar no portal</p>
     <button type="button" class="detail-close" id="siteSearchClose" aria-label="Fechar busca">×</button>
@@ -183,7 +184,7 @@
 
   <div class="hub" id="sobre-portal">
     <div class="wrap">
-      <div class="hub-head">
+      <div class="hub-head" id="sobre-portal-cabecalho">
         <p class="section-index">Mapa completo do portal</p>
         <h2 class="section-title">Central do Estudante</h2>
         <p class="section-lede">Todas as áreas do portal, reunidas por assunto. O menu também reúne todas as seções.</p>
@@ -224,7 +225,7 @@
       <div class="hub-grid">
         <a class="hub-card" href="https://sigaa.ufpb.br" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>SIGAA UFPB ↗</h3><p>Sistema oficial da UFPB para matrícula, histórico e demais registros acadêmicos.</p><span class="go">Acessar site oficial →</span></a>
         <a class="hub-card" href="https://www.ufpb.br" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>Portal UFPB ↗</h3><p>Site institucional da Universidade Federal da Paraíba.</p><span class="go">Acessar site oficial →</span></a>
-        <a class="hub-card" href="mailto:coordef@ccs.ufpb.br"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>Chefia do DEF ↗</h3><p>Contato oficial da Chefia do Departamento de Educação Física.</p><span class="go">Enviar e-mail →</span></a>
+        <a class="hub-card" href="mailto:coordef@ccs.ufpb.br"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><h3>Chefia do DEF (e-mail)</h3><p>Contato oficial da Chefia do Departamento de Educação Física.</p><span class="go">Enviar e-mail →</span></a>
       </div>
     </div>
   </div>
@@ -318,7 +319,7 @@
 </section>
 
 <div class="detail-overlay" id="detailOverlay"></div>
-<aside class="detail-panel" id="detailPanel" role="dialog" aria-modal="true" aria-label="Detalhes da oportunidade">
+<aside class="detail-panel" id="detailPanel" role="dialog" aria-modal="true" aria-label="Detalhes da oportunidade" inert>
   <div class="detail-head">
     <p class="kicker" style="margin:0;">Detalhe da oportunidade</p>
     <button type="button" class="detail-close" id="detailClose" aria-label="Fechar">×</button>
@@ -382,7 +383,7 @@
 
     <div class="chart-block">
       <p class="chart-label">Carga horária por nível</p>
-      <svg class="chart-bars" viewBox="0 0 560 200" preserveAspectRatio="xMinYMin meet">
+      <svg class="chart-bars" viewBox="0 0 560 200" preserveAspectRatio="xMinYMin meet" aria-hidden="true">
         <line x1="30" y1="170" x2="550" y2="170" stroke="#D8D6C7" stroke-width="1"/>
         <!-- Bacharelado bars (green) -->
         <g fill="#245A41">
@@ -453,15 +454,16 @@
     <div class="level-compare">
       <p class="chart-label">Comparar disciplinas nível por nível</p>
       <div class="level-pills" id="levelPills">
-        <button class="level-pill active" data-level="1">1º</button>
-        <button class="level-pill" data-level="2">2º</button>
-        <button class="level-pill" data-level="3">3º</button>
-        <button class="level-pill" data-level="4">4º</button>
-        <button class="level-pill" data-level="5">5º</button>
-        <button class="level-pill" data-level="6">6º</button>
-        <button class="level-pill" data-level="7">7º</button>
-        <button class="level-pill" data-level="8">8º</button>
+        <button class="level-pill active" data-level="1" aria-pressed="true">1º</button>
+        <button class="level-pill" data-level="2" aria-pressed="false">2º</button>
+        <button class="level-pill" data-level="3" aria-pressed="false">3º</button>
+        <button class="level-pill" data-level="4" aria-pressed="false">4º</button>
+        <button class="level-pill" data-level="5" aria-pressed="false">5º</button>
+        <button class="level-pill" data-level="6" aria-pressed="false">6º</button>
+        <button class="level-pill" data-level="7" aria-pressed="false">7º</button>
+        <button class="level-pill" data-level="8" aria-pressed="false">8º</button>
       </div>
+      <p id="levelCompareStatus" class="visually-hidden" aria-live="polite"></p>
       <div class="level-compare-grid">
         <div class="level-col">
           <h4>Bacharelado <span id="levelBachTotal" class="level-total"></span></h4>
@@ -854,7 +856,7 @@
     <div class="section-head">
       <p class="kicker">Mapeamento temático · foco na Licenciatura</p>
       <h2 class="section-title">Trilhas de humanidades (CCHLA)</h2>
-      <p class="section-lede">O bloco de saúde acima pesa mais para o Bacharelado. Aqui estão disciplinas de Psicologia, Serviço Social, Ciências Sociais (Licenciatura), Filosofia (Licenciatura) e Letras-Libras que reforçam exatamente o que a Licenciatura em Educação Física mais precisa: pedagogia, psicologia da aprendizagem, inclusão e gestão escolar.</p>
+      <p class="section-lede">As <a href="#trilhas">Trilhas de saúde</a> pesam mais para o Bacharelado. Aqui estão disciplinas de Psicologia, Serviço Social, Ciências Sociais (Licenciatura), Filosofia (Licenciatura) e Letras-Libras que reforçam exatamente o que a Licenciatura em Educação Física mais precisa: pedagogia, psicologia da aprendizagem, inclusão e gestão escolar.</p>
       <p class="section-lede" style="margin-top:10px;font-size:14px;"><span class="tag-bach" style="margin-left:0;">também Bacharelado</span> marca disciplinas que também interessam a quem faz o Bacharelado — seja para pesquisa (antropologia e sociologia do esporte, avaliação, gerontologia) ou para atuação prática (categorias de base, inclusão, projetos comunitários).</p>
     </div>
 
@@ -974,14 +976,15 @@
     <div class="section-head">
       <p class="kicker">Componentes flexíveis</p>
       <h2 class="section-title">Atividades acadêmicas especiais aproveitáveis</h2>
+      <p class="section-lede">Esta seção reúne exemplos de atividades acadêmicas e componentes oferecidos por outros cursos da UFPB — extensão, monitoria, iniciação científica, tópicos temáticos e Libras — que podem se relacionar com a formação em Educação Física, a partir dos itens listados abaixo.</p>
     </div>
     <div class="special-list">
       <div class="special-item" data-search><svg class="special-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4l-4 8a4 4 0 004 6h6a4 4 0 004-6l-4-8V3"/><path d="M6 15h12"/></svg><div><b>Extensão em saúde coletiva</b>UCEs de Educação em Saúde (Enfermagem, Nutrição, Fonoaudiologia) contam como atividade complementar de extensão para EF.</div></div>
-      <div class="special-item" data-search><svg class="special-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 15c2.8.3 4.5 2.3 4.5 5"/></svg><div><b>Extensão comunitária (CCHLA)</b>Trabalho com Comunidade I e II (Serviço Social) e Atividade de Extensão (Ciências Sociais/Filosofia) reforçam o eixo social já previsto em Lazer e Sociedade, na grade de EF.</div></div>
+      <div class="special-item" data-search><svg class="special-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5"/><path d="M14.5 15c2.8.3 4.5 2.3 4.5 5"/></svg><div><b>Extensão comunitária (CCHLA)</b><a href="#trilha-servico-social">Trabalho com Comunidade I e II</a> (Serviço Social) e Atividade de Extensão (Ciências Sociais/Filosofia) reforçam o eixo social já previsto em Lazer e Sociedade, na grade de EF.</div></div>
       <div class="special-item" data-search><svg class="special-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21h6M12 21v-3.5"/><path d="M7 17.5h10"/><path d="M9.5 3h5M11 3v4.2a5 5 0 003 4.6 5 5 0 013 4.6v1.1H7v-1.1a5 5 0 013-4.6 5 5 0 003-4.6V3"/></svg><div><b>Monitoria / iniciação científica</b>Formato comum em Biomedicina, Farmácia e Odontologia — pode cruzar com pesquisa em fisiologia do exercício.</div></div>
       <div class="special-item" data-search><svg class="special-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5H21l-5.2 4 2 6.5L12 15l-5.8 4 2-6.5L3 8.5h6.5z"/></svg><div><b>Tópicos especiais</b>Fisioterapia, Nutrição e Enfermagem oferecem temas atuais (ex: saúde do idoso) que dialogam com os Tópicos Temáticos já previstos na grade de EF.</div></div>
       <div class="special-item" data-search><svg class="special-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h13v14H6a2 2 0 00-2 2z"/><path d="M4 19.5A2 2 0 016 18h13"/></svg><div><b>Tópicos temáticos (CCHLA)</b>Filosofia e Ciências Sociais (Licenciaturas) também têm "Tópicos Temáticos I–VII" — mesma nomenclatura já usada na Licenciatura de EF, facilitando o diálogo entre as ofertas.</div></div>
-      <div class="special-item" data-search><svg class="special-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V5.5a1.4 1.4 0 012.8 0V10"/><path d="M9.8 10.3V4a1.4 1.4 0 012.8 0v6.3"/><path d="M12.6 10.3V5a1.4 1.4 0 012.8 0v6"/><path d="M15.4 12.2v-1.7a1.4 1.4 0 012.8 0V15a6 6 0 01-6 6h-1.2a6 6 0 01-5-2.7L4 14.8c-.5-.8-.2-1.7.6-2.1a1.5 1.5 0 011.9.5L7 14"/></svg><div><b>Libras</b>Obrigatória na Licenciatura de EF, optativa na maioria dos outros cursos. Quem quiser ir além, Letras-Libras oferece Libras I a VI (360h) para uma formação bem mais aprofundada.</div></div>
+      <div class="special-item" data-search><svg class="special-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V5.5a1.4 1.4 0 012.8 0V10"/><path d="M9.8 10.3V4a1.4 1.4 0 012.8 0v6.3"/><path d="M12.6 10.3V5a1.4 1.4 0 012.8 0v6"/><path d="M15.4 12.2v-1.7a1.4 1.4 0 012.8 0V15a6 6 0 01-6 6h-1.2a6 6 0 01-5-2.7L4 14.8c-.5-.8-.2-1.7.6-2.1a1.5 1.5 0 011.9.5L7 14"/></svg><div><b>Libras</b>Obrigatória na Licenciatura de EF, optativa na maioria dos outros cursos. Quem quiser ir além, Letras-Libras oferece <a href="#trilha-inclusao-libras">Libras I a VI</a> (360h) para uma formação bem mais aprofundada.</div></div>
     </div>
   </div>
 </section><section id="quiz" class="tab-panel">
@@ -1070,6 +1073,10 @@
 <section id="pesquisa" class="tab-panel alt">
   <div class="wrap">
     <p class="crumb"><a href="#inicio">Início</a> / Pesquisa</p>
+    <nav class="subtab-nav" aria-label="Navegação de Pesquisa">
+      <a href="#pesquisa">Pesquisa e laboratórios</a>
+      <a href="#portas-abertas">CAEF Portas Abertas</a>
+    </nav>
     <div class="section-head">
       <p class="section-index">Pesquisa</p>
       <h2 class="section-title">Descubra o que está sendo investigado dentro da Educação Física</h2>
@@ -1106,6 +1113,10 @@
 <section id="portas-abertas" class="tab-panel">
   <div class="wrap">
     <p class="crumb"><a href="#inicio">Início</a> / Pesquisa / Portas Abertas</p>
+    <nav class="subtab-nav" aria-label="Navegação de Pesquisa">
+      <a href="#pesquisa">Pesquisa e laboratórios</a>
+      <a href="#portas-abertas">CAEF Portas Abertas</a>
+    </nav>
     <div class="section-head">
       <p class="section-index">CAEF Portas Abertas</p>
       <h2 class="section-title">Entre. Conheça. Pergunte. Participe.</h2>
@@ -1177,7 +1188,7 @@
 </section>
 
 <div class="detail-overlay" id="gestaoOverlay"></div>
-<aside class="detail-panel" id="gestaoPanel" role="dialog" aria-modal="true" aria-labelledby="gestaoPanelTitle">
+<aside class="detail-panel" id="gestaoPanel" role="dialog" aria-modal="true" aria-labelledby="gestaoPanelTitle" inert>
   <div class="detail-head">
     <p class="kicker" id="gestaoPanelTitle" style="margin:0;">Integrante da gestão</p>
     <button type="button" class="detail-close" id="gestaoPanelClose" aria-label="Fechar detalhes">×</button>
@@ -1188,6 +1199,12 @@
 <section id="acervo" class="tab-panel alt">
   <div class="wrap">
     <p class="crumb"><a href="#inicio">Início</a> / Serviços / Acervo Acadêmico</p>
+    <nav class="subtab-nav" aria-label="Navegação de Serviços">
+      <a href="#apadrinhamento">Apadrinhamento</a>
+      <a href="#ouvidoria">Ouvidoria</a>
+      <a href="#acervo">Acervo Acadêmico</a>
+      <a href="#loja">Loja</a>
+    </nav>
     <div class="section-head">
       <p class="section-index">Acervo Acadêmico Digital e Colaborativo</p>
       <h2 class="section-title">Fontes gratuitas, legais e organizadas por período</h2>
@@ -1222,7 +1239,13 @@
 
 <section id="apadrinhamento" class="tab-panel">
   <div class="wrap">
-    <p class="crumb"><a href="#inicio">Início</a> / Permanência e Representação / Apadrinhamento</p>
+    <p class="crumb"><a href="#inicio">Início</a> / Serviços / Apadrinhamento</p>
+    <nav class="subtab-nav" aria-label="Navegação de Serviços">
+      <a href="#apadrinhamento">Apadrinhamento</a>
+      <a href="#ouvidoria">Ouvidoria</a>
+      <a href="#acervo">Acervo Acadêmico</a>
+      <a href="#loja">Loja</a>
+    </nav>
     <div class="section-head">
       <p class="section-index">Permanência e Representação</p>
       <h2 class="section-title">Apadrinhamento Acadêmico</h2>
@@ -1309,7 +1332,13 @@
 
 <section id="ouvidoria" class="tab-panel alt">
   <div class="wrap">
-    <p class="crumb"><a href="#inicio">Início</a> / Permanência e Representação / Ouvidoria</p>
+    <p class="crumb"><a href="#inicio">Início</a> / Serviços / Ouvidoria</p>
+    <nav class="subtab-nav" aria-label="Navegação de Serviços">
+      <a href="#apadrinhamento">Apadrinhamento</a>
+      <a href="#ouvidoria">Ouvidoria</a>
+      <a href="#acervo">Acervo Acadêmico</a>
+      <a href="#loja">Loja</a>
+    </nav>
     <div class="ouvidoria-hero">
       <p class="kicker" style="color:var(--gold-400);">Permanência e Representação</p>
       <h2 class="section-title" style="color:var(--white);">Um canal para ouvir os estudantes</h2>
@@ -1344,7 +1373,13 @@
 
 <section id="loja" class="tab-panel">
   <div class="wrap">
-    <p class="crumb"><a href="#inicio">Início</a> / Loja</p>
+    <p class="crumb"><a href="#inicio">Início</a> / Serviços / Loja</p>
+    <nav class="subtab-nav" aria-label="Navegação de Serviços">
+      <a href="#apadrinhamento">Apadrinhamento</a>
+      <a href="#ouvidoria">Ouvidoria</a>
+      <a href="#acervo">Acervo Acadêmico</a>
+      <a href="#loja">Loja</a>
+    </nav>
     <div class="empty-state" style="max-width:640px;margin:0 auto;">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l1 12H5L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg>
       <h4>Loja da Sinergia</h4>
@@ -1356,6 +1391,297 @@
       </p>
       <p style="margin-top:18px;font-size:13.5px;color:var(--ink-faint);">O lançamento será anunciado em "Acontecendo agora", na <a href="#inicio">página inicial</a>.</p>
     </div>
+  </div>
+</section>
+
+
+<!-- ÁREA DO ESTUDANTE · módulo separado, bloqueado até configuração real do Supabase -->
+<section id="area-estudante" class="tab-panel" aria-labelledby="studentTitle">
+  <div class="wrap student-area">
+    <p class="crumb"><a href="#inicio">Início</a> / Área do Estudante</p>
+    <div class="section-head">
+      <p class="section-index">Área do Estudante · CAEF</p>
+      <h2 class="section-title" id="studentTitle">Um espaço para acompanhar os comunicados</h2>
+      <p class="section-lede">Cadastro voluntário com e-mail acadêmico da UFPB. Esta é uma iniciativa estudantil do CAEF, não um serviço oficial da Universidade.</p>
+    </div>
+
+    <!-- Estado: verificando sessão/carregando o SDK, antes de decidir qual painel mostrar -->
+    <div class="student-loading" id="studentLoading" role="status" aria-live="polite" hidden>
+      <span class="student-spinner" aria-hidden="true"></span>
+      <p>Carregando sua área…</p>
+    </div>
+
+    <!-- Estado: cadastro desativado para visitantes, ou serviço indisponível -->
+    <div class="student-panel student-panel-solo" id="studentSetup" role="status">
+      <h3>Área do Estudante em preparação</h3>
+      <p>O cadastro ainda não está disponível. O Mural de Avisos segue acessível a todas as pessoas, sem conta.</p>
+      <a href="#mural" class="student-link">Consultar Mural de Avisos</a>
+      <p class="student-inline-status" id="studentSetupStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+    </div>
+
+    <!-- Estado: tela de acesso (cadastro/login), dois blocos no desktop -->
+    <div id="studentAuth" class="student-access" hidden>
+      <div class="student-access-shell">
+        <div class="student-intro">
+          <p class="kicker">Iniciativa estudantil do CAEF</p>
+          <h3>Seu espaço no CAEF</h3>
+          <p>Um lugar para acompanhar, com seu e-mail acadêmico, os comunicados que o CAEF publica no Mural.</p>
+          <ul class="student-intro-points">
+            <li>Cadastro voluntário, só com e-mail <strong>@academico.ufpb.br</strong></li>
+            <li>Confirmação por e-mail antes do primeiro acesso</li>
+            <li>Você decide informar (ou não) nome, habilitação e período em Meu Perfil</li>
+          </ul>
+        </div>
+        <div class="student-panel student-access-form">
+
+          <!-- Sub-estado: entrar -->
+          <div id="studentViewLogin" class="student-access-view">
+            <h3>Entrar</h3>
+            <p>Informe seu e-mail acadêmico e sua senha.</p>
+            <p class="student-note">O e-mail confirmado não comprova matrícula ativa nem vínculo com o curso de Educação Física. Não utilizamos listas de alunos do SIGAA neste cadastro.</p>
+            <form id="studentLoginForm">
+              <label for="studentLoginEmail">E-mail acadêmico da UFPB</label>
+              <input id="studentLoginEmail" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" placeholder="nome@academico.ufpb.br" aria-describedby="studentDomainHint">
+              <small id="studentDomainHint">Nesta versão, somente endereços @academico.ufpb.br são aceitos.</small>
+              <label for="studentLoginPassword">Senha</label>
+              <div class="student-password-row">
+                <input id="studentLoginPassword" name="password" type="password" autocomplete="current-password" required>
+                <button type="button" class="student-toggle-pw" data-toggle-for="studentLoginPassword" aria-pressed="false">Mostrar</button>
+              </div>
+              <button class="student-button" type="submit" id="studentLoginSubmit">Entrar</button>
+              <p class="student-inline-status" id="studentAccessStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+            </form>
+            <p class="student-access-links">
+              <button type="button" class="student-linklike" id="studentGoForgot">Esqueci minha senha</button>
+              ·
+              <button type="button" class="student-linklike" id="studentGoSignup">Não tem conta? Cadastre-se</button>
+            </p>
+          </div>
+
+          <!-- Sub-estado: cadastro -->
+          <div id="studentViewSignup" class="student-access-view" hidden>
+            <h3>Criar conta</h3>
+            <p>Cadastre-se com seu e-mail acadêmico e uma senha.</p>
+            <p class="student-note">O e-mail confirmado não comprova matrícula ativa nem vínculo com o curso de Educação Física. Não utilizamos listas de alunos do SIGAA neste cadastro.</p>
+            <form id="studentSignupForm">
+              <label for="studentSignupEmail">E-mail acadêmico da UFPB</label>
+              <input id="studentSignupEmail" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" placeholder="nome@academico.ufpb.br" aria-describedby="studentSignupDomainHint">
+              <small id="studentSignupDomainHint">Nesta versão, somente endereços @academico.ufpb.br são aceitos.</small>
+              <label for="studentSignupPassword">Senha</label>
+              <div class="student-password-row">
+                <input id="studentSignupPassword" name="password" type="password" autocomplete="new-password" required aria-describedby="studentSignupPasswordHint">
+                <button type="button" class="student-toggle-pw" data-toggle-for="studentSignupPassword,studentSignupPasswordConfirm" aria-pressed="false">Mostrar</button>
+              </div>
+              <small id="studentSignupPasswordHint">Mínimo de 8 caracteres.</small>
+              <label for="studentSignupPasswordConfirm">Confirmar senha</label>
+              <input id="studentSignupPasswordConfirm" name="password_confirm" type="password" autocomplete="new-password" required>
+              <button class="student-button" type="submit" id="studentSignupSubmit">Cadastrar</button>
+              <p class="student-inline-status" id="studentSignupStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+            </form>
+            <p class="student-access-links">
+              <button type="button" class="student-linklike" id="studentGoLoginFromSignup">Já tem conta? Entrar</button>
+            </p>
+          </div>
+
+          <!-- Sub-estado: cadastro enviado, aguardando confirmação -->
+          <div id="studentViewSignupSent" class="student-access-view" hidden>
+            <h3>Verifique seu e-mail</h3>
+            <p>Se for possível criar uma conta com <strong id="studentSignupSentEmail"></strong>, enviamos um link de confirmação — confira também a caixa de spam. Se esse e-mail já tiver uma conta, nenhum novo cadastro foi criado; você pode apenas entrar ou usar "Esqueci minha senha".</p>
+            <p class="student-access-links"><button type="button" class="student-linklike" id="studentGoLoginFromSignupSent">Voltar para Entrar</button></p>
+          </div>
+
+          <!-- Sub-estado: esqueci minha senha -->
+          <div id="studentViewForgot" class="student-access-view" hidden>
+            <h3>Esqueci minha senha</h3>
+            <p>Informe seu e-mail acadêmico para receber um link de redefinição de senha.</p>
+            <form id="studentForgotForm">
+              <label for="studentForgotEmail">E-mail acadêmico da UFPB</label>
+              <input id="studentForgotEmail" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" placeholder="nome@academico.ufpb.br">
+              <button class="student-button" type="submit" id="studentForgotSubmit">Enviar link de redefinição</button>
+              <p class="student-inline-status" id="studentForgotStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+            </form>
+            <p class="student-access-links"><button type="button" class="student-linklike" id="studentGoLoginFromForgot">Voltar para Entrar</button></p>
+          </div>
+
+          <!-- Sub-estado: e-mail de redefinição enviado -->
+          <div id="studentViewForgotSent" class="student-access-view" hidden>
+            <h3>Verifique seu e-mail</h3>
+            <p>Se <strong id="studentForgotSentEmail"></strong> tiver uma conta, enviamos um link para redefinir a senha. Confira também a caixa de spam.</p>
+            <p class="student-access-links"><button type="button" class="student-linklike" id="studentGoLoginFromForgotSent">Voltar para Entrar</button></p>
+          </div>
+
+          <!-- Sub-estado: definir nova senha (chegou pelo link de recuperação) -->
+          <div id="studentViewReset" class="student-access-view" hidden>
+            <h3>Defina uma nova senha</h3>
+            <p>Escolha uma nova senha para sua conta.</p>
+            <form id="studentResetForm">
+              <label for="studentResetPassword">Nova senha</label>
+              <div class="student-password-row">
+                <input id="studentResetPassword" name="password" type="password" autocomplete="new-password" required aria-describedby="studentResetPasswordHint">
+                <button type="button" class="student-toggle-pw" data-toggle-for="studentResetPassword,studentResetPasswordConfirm" aria-pressed="false">Mostrar</button>
+              </div>
+              <small id="studentResetPasswordHint">Mínimo de 8 caracteres.</small>
+              <label for="studentResetPasswordConfirm">Confirmar nova senha</label>
+              <input id="studentResetPasswordConfirm" name="password_confirm" type="password" autocomplete="new-password" required>
+              <button class="student-button" type="submit" id="studentResetSubmit">Salvar nova senha</button>
+              <p class="student-inline-status" id="studentResetStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+            </form>
+          </div>
+
+          <p class="student-note" id="studentAccessConsent">Ao continuar, você concorda com o uso do endereço informado para gerenciar sua conta nesta área. Avisos de comunicados por e-mail não são enviados nesta versão. Você poderá excluir sua conta dentro da área autenticada.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado: área autenticada, com sub-navegação Início / Meu Perfil / Minha Conta -->
+    <div id="studentLogged" class="student-logged" hidden>
+      <div class="student-logged-head">
+        <span class="student-avatar" id="studentAvatar" aria-hidden="true"><img id="studentAvatarPhoto" alt="" hidden><span id="studentAvatarInitials">--</span></span>
+        <div>
+          <h3 id="studentLoggedTitle" tabindex="-1">Bem-vindo(a) de volta</h3>
+          <p class="student-note">Acesso autenticado com <strong id="studentAccountEmail"></strong>.</p>
+        </div>
+      </div>
+
+      <div class="student-subnav" role="tablist" aria-label="Seções da Área do Estudante">
+        <button type="button" role="tab" id="studentTabInicio" aria-controls="studentPanelInicio" aria-selected="true">Início</button>
+        <button type="button" role="tab" id="studentTabPerfil" aria-controls="studentPanelPerfil" aria-selected="false" tabindex="-1">Meu Perfil</button>
+        <button type="button" role="tab" id="studentTabConta" aria-controls="studentPanelConta" aria-selected="false" tabindex="-1">Minha Conta</button>
+      </div>
+
+      <div class="student-panel" id="studentPanelInicio" role="tabpanel" aria-labelledby="studentTabInicio" tabindex="0">
+        <p>Os comunicados também permanecem públicos no <a href="#mural">Mural de Avisos</a>.</p>
+        <h4>Comunicados recentes</h4>
+        <div id="studentAnnouncements" class="student-announcements"></div>
+      </div>
+
+      <div class="student-panel" id="studentPanelPerfil" role="tabpanel" aria-labelledby="studentTabPerfil" tabindex="0" hidden>
+        <div class="student-profile-view" id="studentProfileView">
+          <div class="student-photo-block">
+            <span class="student-avatar student-avatar-lg" id="studentProfileAvatar" aria-hidden="true"><img id="studentProfileAvatarPhoto" alt="" hidden><span id="studentProfileAvatarInitials">--</span></span>
+            <div class="student-photo-actions">
+              <label class="student-button student-secondary student-file-label" for="studentAvatarInput">
+                Alterar foto
+                <input type="file" id="studentAvatarInput" class="student-file-input" accept="image/jpeg,image/png,image/webp">
+              </label>
+              <button type="button" class="student-button student-secondary" id="studentAvatarRemove" hidden>Remover foto</button>
+            </div>
+          </div>
+          <p class="student-note">Foto opcional e visível só para você — nunca é gerada nem preenchida automaticamente. Formatos aceitos: JPEG, PNG ou WEBP, até 2&nbsp;MB. Sem foto, mostramos suas iniciais.</p>
+          <p class="student-inline-status" id="studentAvatarStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+          <dl class="student-profile-facts">
+            <div><dt>Nome de exibição</dt><dd id="studentProfileName">Não informado</dd></div>
+            <div><dt>Habilitação</dt><dd id="studentProfileHabilitacao">Não informado</dd></div>
+            <div><dt>Período</dt><dd id="studentProfilePeriodo">Não informado</dd></div>
+            <div><dt>Conta criada em</dt><dd id="studentProfileCreated">—</dd></div>
+          </dl>
+          <p class="student-note">Esses dados são opcionais, informados por você mesmo(a) e não são verificados pela UFPB nem pelo SIGAA — não comprovam habilitação, período ou matrícula reais.</p>
+          <button type="button" class="student-button student-secondary" id="studentProfileEdit">Editar perfil</button>
+        </div>
+        <form id="studentProfileForm" class="student-profile-form" hidden>
+          <label for="studentProfileNameInput">Nome de exibição</label>
+          <input id="studentProfileNameInput" type="text" maxlength="80" autocomplete="off" placeholder="Como podemos te chamar?">
+          <div class="student-field-row">
+            <div>
+              <label for="studentProfileHabilitacaoInput">Habilitação</label>
+              <select id="studentProfileHabilitacaoInput">
+                <option value="">Prefiro não informar</option>
+                <option value="bacharelado">Bacharelado</option>
+                <option value="licenciatura">Licenciatura</option>
+              </select>
+            </div>
+            <div>
+              <label for="studentProfilePeriodoInput">Período</label>
+              <input id="studentProfilePeriodoInput" type="text" maxlength="40" autocomplete="off" placeholder="ex.: 5º período">
+            </div>
+          </div>
+          <small>Campos opcionais e autodeclarados — não são consultados em listas do SIGAA nem comprovam vínculo ativo com o curso.</small>
+          <div class="student-controls">
+            <button type="submit" class="student-button" id="studentProfileSave">Salvar perfil</button>
+            <button type="button" class="student-button student-secondary" id="studentProfileCancel">Cancelar</button>
+          </div>
+          <p class="student-inline-status" id="studentProfileStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+        </form>
+      </div>
+
+      <div class="student-panel" id="studentPanelConta" role="tabpanel" aria-labelledby="studentTabConta" tabindex="0" hidden>
+        <div class="student-notify" id="studentNotifyBlock" hidden>
+          <h4>Notificações por e-mail</h4>
+          <p>Avise por e-mail sobre novas publicações e atualizações relevantes do Mural de Avisos e do Radar CAEF. Desligado por padrão — criar sua conta não ativa isso automaticamente.</p>
+          <label class="student-toggle">
+            <input type="checkbox" id="studentNotifyToggle">
+            <span>Quero receber notificações por e-mail</span>
+          </label>
+          <p class="student-inline-status" id="studentNotifyStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+        </div>
+        <h4>Sair da conta</h4>
+        <p>Encerra sua sessão neste navegador. Você pode entrar novamente quando quiser, com seu e-mail acadêmico e sua senha.</p>
+        <div class="student-controls"><button type="button" class="student-button student-secondary" id="studentLogout">Sair da conta</button></div>
+        <div class="student-delete">
+          <h4>Excluir minha conta</h4>
+          <p>A exclusão remove o acesso e os dados de perfil associados (nome, habilitação e período, se informados). Você poderá criar outra conta posteriormente.</p>
+          <button type="button" class="student-button student-danger" id="studentDeleteOpen">Solicitar exclusão</button>
+          <form id="studentDeleteForm" hidden>
+            <label for="studentDeleteConfirm">Para confirmar, digite EXCLUIR:</label>
+            <input id="studentDeleteConfirm" type="text" autocomplete="off" spellcheck="false">
+            <div class="student-controls"><button type="submit" class="student-button student-danger" id="studentDeleteSubmit">Excluir minha conta</button><button type="button" class="student-button student-secondary" id="studentDeleteCancel">Cancelar</button></div>
+          </form>
+        </div>
+        <p class="student-inline-status" id="studentAccountStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V28 — Painel de Gestão: só alcançável pelo link do widget de conta
+     (nunca pela navegação principal do portal). A própria RLS no banco
+     decide, de verdade, quem consegue ler/gravar cada coisa — este painel
+     só evita mostrar formulários e listas para quem não é administrador,
+     como cortesia de interface. -->
+<section id="painel-gestao" class="tab-panel">
+  <div class="wrap">
+    <p class="crumb"><a href="#inicio">Início</a> / Painel de Gestão</p>
+    <h2 class="section-title">Painel de Gestão</h2>
+    <p class="section-lead">Edição do Mural de Avisos e do Radar CAEF pela coordenação do CAEF. O Portal CAEF é uma iniciativa estudantil, não um serviço oficial da UFPB.</p>
+
+    <div id="painelGestaoRestrito" class="empty-state" hidden>
+      <h4>Acesso restrito</h4>
+      <p>Esta área é reservada a administradores autorizados do Portal CAEF. Se você acredita que deveria ter acesso, contate a coordenação do CAEF.</p>
+    </div>
+
+    <div id="painelGestaoIndisponivel" class="empty-state" hidden>
+      <h4>Painel indisponível no momento</h4>
+      <p>Não foi possível conferir suas permissões agora. Tente novamente em instantes.</p>
+    </div>
+
+    <div id="painelGestaoConteudo" hidden>
+      <div class="painel-tabs" role="tablist" aria-label="Módulo do painel">
+        <button type="button" role="tab" id="painelTabMural" aria-selected="true" class="painel-tab-btn">Mural de Avisos</button>
+        <button type="button" role="tab" id="painelTabRadar" aria-selected="false" class="painel-tab-btn">Radar CAEF</button>
+      </div>
+
+      <div id="painelMural" class="painel-modulo">
+        <div class="painel-modulo-actions">
+          <button type="button" class="student-button" id="painelMuralNovo">+ Novo aviso</button>
+        </div>
+        <div id="painelMuralLista" class="painel-lista" aria-live="polite"></div>
+      </div>
+
+      <div id="painelRadar" class="painel-modulo" hidden>
+        <div class="painel-modulo-actions">
+          <button type="button" class="student-button" id="painelRadarNovo">+ Nova oportunidade</button>
+        </div>
+        <div id="painelRadarLista" class="painel-lista" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulário de edição (aviso ou oportunidade), reaproveitado pelos
+       dois módulos — só um por vez pode estar aberto. -->
+  <div class="detail-overlay" id="painelFormOverlay"></div>
+  <div class="detail-panel" id="painelFormPanel" role="dialog" aria-modal="true" aria-labelledby="painelFormTitle">
+    <button type="button" class="detail-close" id="painelFormClose" aria-label="Fechar formulário">×</button>
+    <div id="painelFormBody" class="detail-body"></div>
   </div>
 </section>
 
@@ -1407,6 +1733,7 @@
           <li><a href="#radar">Radar CAEF</a></li>
           <li><a href="#comparativo">Ensino (grades e trilhas)</a></li>
           <li><a href="#pesquisa">Pesquisa e laboratórios</a></li>
+          <li><a href="#portas-abertas">CAEF Portas Abertas</a></li>
           <li><a href="#extensao">Extensão</a></li>
           <li><a href="#formacao">CAEF Formação</a></li>
           <li><a href="#gestao">Conheça a Gestão</a></li>
@@ -1419,7 +1746,6 @@
           <li><a href="#apadrinhamento">Apadrinhamento Acadêmico</a></li>
           <li><a href="#ouvidoria">Ouvidoria do Discente</a></li>
           <li><a href="#acervo">Acervo Acadêmico</a></li>
-          <li><a href="#portas-abertas">CAEF Portas Abertas</a></li>
           <li><a href="#loja">Loja</a></li>
         </ul>
       </div>
@@ -1429,7 +1755,7 @@
           <li><a href="#creditos">Créditos</a></li>
           <li><a href="https://sigaa.ufpb.br" target="_blank" rel="noopener">SIGAA UFPB ↗</a></li>
           <li><a href="https://www.ufpb.br" target="_blank" rel="noopener">Portal UFPB ↗</a></li>
-          <li><a href="mailto:coordef@ccs.ufpb.br">Chefia do DEF ↗</a></li>
+          <li><a href="mailto:coordef@ccs.ufpb.br">Chefia do DEF (e-mail)</a></li>
         </ul>
         <h5 style="margin-top:22px;">Canais do CAEF</h5>
         <ul>
@@ -1447,6 +1773,32 @@
 
 </main>
 
+<div class="account-widget-slot account-widget-slot-desktop" id="accountWidgetSlotDesktop">
+  <div class="account-widget" id="accountWidget">
+    <button type="button" class="account-fab" id="accountWidgetToggle" aria-haspopup="true" aria-expanded="false" aria-controls="accountWidgetMenu" aria-label="Conta">
+      <span class="account-fab-avatar" id="accountFabAvatar" aria-hidden="true">
+        <img id="accountFabPhoto" alt="" hidden>
+        <span id="accountFabInitials" hidden></span>
+        <svg id="accountFabGuestIcon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M4.8 19.4c1.4-3.4 4.2-5.2 7.2-5.2s5.8 1.8 7.2 5.2"/></svg>
+      </span>
+    </button>
+    <div class="account-menu" id="accountWidgetMenu" role="menu" aria-label="Conta" hidden>
+      <div class="account-menu-head" id="accountMenuHead" hidden>
+        <p class="account-menu-email" id="accountMenuEmail"></p>
+      </div>
+      <a href="#area-estudante" class="account-menu-item" id="accountMenuProfile" role="menuitem" hidden>Meu Perfil</a>
+      <a href="#area-estudante" class="account-menu-item" id="accountMenuConta" role="menuitem" hidden>Minha Conta</a>
+      <!-- V28: só aparece quando o evento caef:accountstate chega com
+           isAdmin=true — e mesmo assim, quem decide de verdade quem pode
+           editar algo é sempre a RLS no banco, nunca este link. -->
+      <a href="#painel-gestao" class="account-menu-item" id="accountMenuPainel" role="menuitem" hidden>Painel de Gestão</a>
+      <button type="button" class="account-menu-item" id="accountMenuLogout" role="menuitem" hidden>Sair da conta</button>
+      <a href="#area-estudante" class="account-menu-item" id="accountMenuLogin" role="menuitem" hidden>Entrar</a>
+      <a href="#area-estudante" class="account-menu-item" id="accountMenuSignup" role="menuitem" hidden>Criar conta</a>
+    </div>
+  </div>
+</div>
+
 <script src="js/data/oportunidades.js"></script>
 <script src="js/data/laboratorios.js"></script>
 <script src="js/data/formacao.js"></script>
@@ -1457,7 +1809,13 @@
 <script src="js/data/apadrinhamento.js"></script>
 <script src="js/data/ouvidoria.js"></script>
 <script src="js/data/busca-secoes.js"></script>
+<script src="js/area-estudante-config.js"></script>
+<script src="js/content-config.js"></script>
+<script src="js/supabase-content.js"></script>
 <script src="js/main.js"></script>
+<script src="js/area-estudante.js"></script>
+<script src="js/account-widget.js"></script>
+<script src="js/admin-panel.js"></script>
 <script src="js/apadrinhamento-acompanhamento.js"></script>
 </body>
 </html>

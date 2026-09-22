@@ -26,6 +26,12 @@
      destino só para ele aparecer em mais buscas. Não é preciso repetir
      acentos de propósito: a busca ignora acentuação e maiúsculas/
      minúsculas automaticamente.
+   - focusId (opcional): id de um elemento DENTRO da seção de "destino"
+     (não precisa ser uma aba própria) para o qual o foco e a rolagem vão
+     depois de abrir a aba — mesmo mecanismo já usado pelos avisos do
+     Mural. Use só quando o resultado precisar apontar para um bloco
+     específico dentro de uma seção maior; sem isso, o resultado leva
+     só para o topo da aba de "destino", como sempre.
 
    IMPORTANTE:
    - Cada destino deve aparecer só UMA VEZ nesta lista, mesmo que exista
@@ -47,7 +53,16 @@ const BUSCA_SECOES = [
     titulo: "Início",
     resumo: "Página inicial do portal, com a Central do Estudante e o guia \"Por onde começar?\".",
     destino: "#inicio",
-    termos: ["início", "home", "página inicial", "central do estudante", "por onde começar", "começar"]
+    termos: ["início", "home", "página inicial", "por onde começar", "começar"]
+  },
+  {
+    id: "central-estudante",
+    tipo: "interna",
+    titulo: "Central do Estudante",
+    resumo: "Mapa completo do portal, reunindo todas as áreas por assunto, dentro da página inicial.",
+    destino: "#inicio",
+    focusId: "sobre-portal-cabecalho",
+    termos: ["central do estudante", "central", "mapa do portal", "mapa completo"]
   },
   {
     id: "radar",
