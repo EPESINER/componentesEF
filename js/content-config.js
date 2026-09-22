@@ -15,5 +15,5 @@
    mostrará "indisponível" para todo mundo até a migração existir de
    verdade no banco. */
 window.CAEF_CONTENT_CONFIG = Object.freeze({
-  useSupabaseContent: false
+  useSupabaseContent: true
 });
