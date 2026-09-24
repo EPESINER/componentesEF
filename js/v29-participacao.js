@@ -29,6 +29,96 @@ function auth(){return window.caefStudentClient?Promise.resolve(window.caefStude
 function styles(){
 if(document.getElementById('v29css'))return;var s=document.createElement('style');s.id='v29css';s.textContent=`
 .v29sec{padding:58px 0;background:#f8fbf6;border-top:1px solid var(--line)}.v29head{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap}.v29head p{max-width:760px;color:var(--ink-muted);line-height:1.6}.v29tools{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.v29tools select,.v29form input,.v29form select,.v29form textarea{font:inherit;border:1px solid #a5b9aa;border-radius:9px;background:#fff;padding:11px 12px}.v29feed{display:grid;gap:15px}.v29card{background:#fff;border:1px solid #dce4d7;border-radius:17px;padding:20px}.v29top{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}.v29who{display:flex;gap:10px;align-items:center}.v29ava{width:40px;height:40px;border-radius:50%;background:#0b633b;color:#fff;display:grid;place-items:center;font-weight:800;overflow:hidden}.v29ava img{width:100%;height:100%;object-fit:cover}.v29meta{font-size:12.5px;color:var(--ink-faint)}.v29badges{display:flex;gap:7px;flex-wrap:wrap}.v29badge{font-size:11.5px;font-weight:800;padding:5px 8px;border-radius:999px;background:#eef5ec;color:#225b3c}.v29card h3{margin:15px 0 8px}.v29desc{white-space:pre-wrap;color:var(--ink-muted);line-height:1.65}.v29actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}.v29btn{border:1px solid #c8d6ca;background:#fff;color:#174c31;border-radius:999px;padding:8px 12px;font:inherit;font-size:13px;font-weight:750;cursor:pointer}.v29btn.on{background:#e9f5e7;border-color:#5d9d69}.v29btn.neg.on{background:#f8eeee;border-color:#b98b8b;color:#7b2d2d}.v29resp{margin-top:14px;padding:13px 15px;border-left:4px solid #2d8552;background:#eff8f0}.v29comments{margin-top:13px}.v29comment{padding:11px 0;border-top:1px solid var(--line)}.v29comment p{white-space:pre-wrap;margin:4px 0}.v29comment .v29ava{width:30px;height:30px;font-size:11px}.v29report{margin-top:12px;padding:12px;border-radius:11px;background:#f5f8f4}.v29report textarea{width:100%;min-height:78px;max-width:100%;font:inherit;border:1px solid #a5b9aa;border-radius:9px;padding:10px}.v29btn:disabled{opacity:.55;cursor:wait}.v29report[hidden],.v29comments[hidden],#studentPanelPercurso[hidden],#studentPanelDemandas[hidden]{display:none!important}.v29form{display:grid;gap:10px}.v29form textarea{min-height:120px;resize:vertical}.v29ident{display:flex;gap:15px;flex-wrap:wrap;font-size:13px}.v29ident label{display:flex!important;align-items:center;gap:7px;margin:0!important}.v29status{font-size:13.5px;font-weight:700;color:#17623c}.v29err{color:#9a2020!important}.v29empty{padding:20px;border:1px dashed #c8d6ca;border-radius:13px;background:#fff;color:var(--ink-muted)}.v29step{display:grid;grid-template-columns:auto 1fr auto;gap:12px;padding:14px 0;border-top:1px solid var(--line)}.v29step input{width:20px;height:20px}.v29step h5{margin:0 0 4px}.v29step p{margin:0;color:var(--ink-muted);font-size:13.5px}.v29own{padding:14px 0;border-top:1px solid var(--line)}.v29btn{transition:background-color .15s ease,border-color .15s ease,transform .1s ease}.v29btn:active{transform:scale(.97)}.v29card{transition:box-shadow .15s ease}.v29card:hover{box-shadow:0 6px 18px rgba(8,45,25,.06)}@media(max-width:650px){.v29step{grid-template-columns:auto 1fr}.v29step>a{grid-column:2}.v29head{align-items:flex-start}.v29tools{flex-direction:column;align-items:stretch}}
+
+/* V29.1 — Corrige conflito com os estilos gerais de .student-panel.
+   Campos e opções de privacidade são responsivos e mantêm rótulos legíveis. */
+#studentPanelDemandas .v29form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  min-width: 0;
+  width: 100%;
+}
+#studentPanelDemandas .v29form > label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  font-weight: 750;
+}
+#studentPanelDemandas .v29form > label > :is(input:not([type="checkbox"]), select, textarea) {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.45;
+  border: 1px solid #a5b9aa;
+  border-radius: 9px;
+  background: #fff;
+  color: #173221;
+}
+#studentPanelDemandas .v29form > label > select { min-height: 46px; }
+#studentPanelDemandas .v29form > label > textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+#studentPanelDemandas .v29ident {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+  min-width: 0;
+}
+#studentPanelDemandas .v29ident label {
+  display: inline-flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  margin: 0 !important;
+  min-width: 0;
+  width: auto;
+  max-width: 100%;
+  min-height: 28px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+#studentPanelDemandas .v29ident input[type="checkbox"] {
+  display: inline-block;
+  box-sizing: border-box;
+  flex: 0 0 18px;
+  width: 18px;
+  min-width: 18px;
+  max-width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  accent-color: #145c36;
+  cursor: pointer;
+}
+#studentPanelDemandas .v29ident input[type="checkbox"]:disabled { cursor: not-allowed; }
+#studentPanelDemandas .v29form > .student-button {
+  justify-self: start;
+  max-width: 100%;
+  margin-top: 0;
+}
+#studentPanelDemandas #v29form > .student-button {
+  justify-self: stretch;
+}
+#studentPanelDemandas .v29form > .v29meta,
+#studentPanelDemandas .v29form > .v29status { margin: 0; }
+@media (max-width: 600px) {
+  #studentPanelDemandas .v29form { gap: 14px; }
+  #studentPanelDemandas .v29ident { align-items: flex-start; gap: 10px; }
+  #studentPanelDemandas .v29ident label { width: 100%; }
+  #studentPanelDemandas .v29form > .student-button { justify-self: stretch; }
+}
 `;document.head.appendChild(s)
 }
 
