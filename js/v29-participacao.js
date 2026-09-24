@@ -119,12 +119,86 @@ if(document.getElementById('v29css'))return;var s=document.createElement('style'
   #studentPanelDemandas .v29ident label { width: 100%; }
   #studentPanelDemandas .v29form > .student-button { justify-self: stretch; }
 }
+
+/* V29.2 — Feed compacto. Estilos isolados da Central para preservar as demais páginas. */
+.v29sec{padding:34px 0 42px}
+.v29sec>.wrap{max-width:1040px}
+.v29head{align-items:center;gap:12px}
+.v29head h2{font-size:clamp(26px,3vw,36px);line-height:1.14;margin:6px 0 5px}
+.v29head p{font-size:14px;line-height:1.5;margin:0;max-width:710px}
+.v29head .student-button{padding:10px 15px;flex-shrink:0}
+.v29rules{margin:15px 0 0;border:1px solid #dbe7da;border-radius:10px;background:#fff}
+.v29rules summary{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 14px;font-size:13px;font-weight:750;color:#174b32;cursor:pointer;list-style:none}
+.v29rules summary::-webkit-details-marker{display:none}
+.v29rules summary::after{content:'+';font-size:19px;line-height:1;font-weight:400}
+.v29rules[open] summary::after{content:'−'}
+.v29rules-content{border-top:1px solid #edf1e9;padding:8px 14px 12px;font-size:13px;line-height:1.55;color:var(--ink-muted)}
+.v29rules-content p{margin:0 0 8px}.v29rules-content p:last-child{margin-bottom:0}
+.v29tools{align-items:center;gap:8px 15px;margin:13px 0 14px}
+.v29tools>label{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;margin:0}
+.v29tools select{box-sizing:border-box;height:36px;min-height:36px;max-width:164px;min-width:0;padding:6px 28px 6px 10px;font-size:13px;line-height:1.3;border-radius:8px}
+.v29feed{gap:12px}.v29card{padding:16px 18px;border-radius:14px}
+.v29top{align-items:center;gap:7px 12px}.v29who{gap:8px;min-width:0}.v29who>b,.v29who>div{min-width:0}
+.v29ava{width:34px;height:34px;flex:0 0 34px;font-size:11px;line-height:1}
+.v29ava img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 65%;border-radius:50%}
+.v29badge{font-size:10px;line-height:1.2;padding:4px 7px}
+.v29meta{font-size:11.5px;line-height:1.4}
+.v29card h3{font-size:18px;line-height:1.35;margin:11px 0 7px;overflow-wrap:anywhere}
+.v29desc{font-size:14px;line-height:1.52;margin:0;overflow-wrap:anywhere}
+.v29card.v29collapsed .v29desc{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;white-space:normal}
+.v29expand{display:inline-flex;align-items:center;margin:5px 0 0;padding:4px 2px;min-height:28px;background:none;border:0;font:inherit;font-size:12px;font-weight:800;color:#185d3a;cursor:pointer}
+.v29expand:hover{text-decoration:underline;text-underline-offset:3px}
+.v29actions{gap:5px;margin-top:11px;padding-top:10px}
+.v29actions .v29btn{min-height:34px;border-radius:9px;padding:6px 10px;font-size:12px;line-height:1.15;white-space:nowrap}
+.v29actions .v29btn[data-report]{margin-left:auto;color:#6c655a;background:transparent;border-color:transparent;text-decoration:underline;text-underline-offset:2px}
+.v29resp{margin-top:11px;padding:10px 12px;font-size:13px;line-height:1.45;border-radius:7px}
+.v29comments{margin-top:10px}.v29comment{padding:10px 0}.v29comment p{font-size:13px;line-height:1.5}
+.v29card:focus-within{outline-offset:3px}
+/* Dialog de enquadramento: os pixels da imagem só são enviados após Salvar. */
+.v29crop-overlay[hidden]{display:none!important}
+.v29crop-overlay{position:fixed;inset:0;z-index:20000;display:grid;place-items:center;overflow:auto;background:rgba(10,31,21,.72);padding:16px}
+.v29crop-dialog{box-sizing:border-box;width:min(100%,470px);max-height:calc(100dvh - 32px);overflow-y:auto;border-radius:16px;background:#fff;padding:18px;box-shadow:0 18px 70px #001b13aa}
+.v29crop-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.v29crop-head h3{font-size:20px;margin:0}
+.v29crop-close{width:36px;height:36px;background:#eff5ec;border:0;border-radius:50%;font-size:21px;cursor:pointer}
+.v29crop-help{font-size:13px;line-height:1.5;color:#52635b;margin:8px 0 12px}
+.v29crop-canvas{display:block;box-sizing:border-box;width:min(100%,260px);height:auto;aspect-ratio:1;margin:0 auto 12px;border-radius:50%;background:#edf1e9;touch-action:none;cursor:grab;border:3px solid #e1e9dd}
+.v29crop-canvas:active{cursor:grabbing}
+.v29crop-controls{display:grid;gap:8px}.v29crop-controls label{display:grid;grid-template-columns:85px minmax(0,1fr);gap:10px;align-items:center;font-size:13px;font-weight:700}
+.v29crop-controls input[type=range]{width:100%;min-width:0;accent-color:#145c36}
+.v29crop-file{display:block;margin:11px 0;font-size:13px}
+.v29crop-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin:12px 0 2px}.v29crop-actions button{min-height:40px}
+.v29crop-dialog .v29status{margin:7px 0 0;font-size:12px}
+#studentPanelPerfil #v29editPhoto{align-self:flex-start}
+@media(max-width:650px){
+ .v29sec{padding:22px 0 29px}
+ .v29sec>.wrap{padding-left:16px;padding-right:16px}
+ .v29head{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+ .v29head h2{font-size:26px;line-height:1.13;margin:4px 0 6px}
+ .v29head p{font-size:13px;line-height:1.45}
+ .v29head .student-button{justify-self:start;width:auto;min-height:39px;padding:8px 14px;font-size:13px}
+ .v29rules{margin-top:12px}.v29rules summary{padding:10px 12px}
+ .v29tools{display:flex;flex-direction:row;align-items:center;gap:8px;margin:12px 0}
+ .v29tools>label{display:inline-flex;flex:1 1 0;min-width:0;flex-direction:column;align-items:stretch;gap:3px;font-size:11px}
+ .v29tools select{width:100%;max-width:none;padding:6px 24px 6px 9px;height:35px;min-height:35px;font-size:12px}
+ .v29feed{gap:10px}.v29card{padding:13px 14px;border-radius:13px}
+ .v29top{gap:6px}.v29who{gap:7px}.v29ava{width:32px;height:32px;flex-basis:32px}
+ .v29card h3{font-size:16px;line-height:1.34;margin:10px 0 6px}
+ .v29desc{font-size:13.5px;line-height:1.45}
+ .v29card.v29collapsed .v29desc{-webkit-line-clamp:4;line-clamp:4}
+ .v29actions{gap:4px;flex-wrap:wrap;margin-top:10px;padding-top:9px}
+ .v29actions .v29btn{font-size:11px;min-height:32px;padding:5px 8px}
+ .v29actions .v29btn[data-report]{margin-left:0}
+ .v29badge{font-size:9px;padding:3px 6px}.v29meta{font-size:11px}
+ .v29crop-overlay{padding:10px}.v29crop-dialog{max-height:calc(100dvh - 20px);padding:14px}
+ .v29crop-canvas{width:min(100%,220px)}
+}
+@media(prefers-reduced-motion:reduce){.v29card,.v29btn{transition:none!important}}
 `;document.head.appendChild(s)
 }
 
 function publicUI(){
 if(document.getElementById('central-demandas'))return;var home=document.getElementById('inicio');if(!home)return;
-var sec=document.createElement('section');sec.id='central-demandas';sec.className='v29sec';sec.innerHTML=`<div class="wrap"><div class="v29head"><div><p class="section-index">Participação estudantil</p><h2 class="section-title">Central de Demandas</h2><p>Sugestões aprovadas ficam visíveis para todos. Somente pessoas logadas com e-mail acadêmico confirmado podem sugerir, apoiar, discordar, responder ou denunciar.</p></div><button class="student-button" id="v29suggest">Enviar sugestão</button></div><div class="v29tools"><label>Categoria <select id="v29cat"><option value="">Todas</option>${Object.keys(CAT).map(function(k){return'<option value="'+k+'">'+CAT[k]+'</option>'}).join('')}</select></label><label>Ordenar <select id="v29sort"><option value="recentes">Mais recentes</option><option value="apoios">Mais apoiadas</option><option value="respostas">Mais debatidas</option></select></label></div><p id="v29pubstatus" class="v29status"></p><div id="v29feed" class="v29feed"></div></div>`;
+var sec=document.createElement('section');sec.id='central-demandas';sec.className='v29sec';sec.innerHTML=`<div class="wrap"><div class="v29head"><div><p class="section-index">Participação estudantil</p><h2 class="section-title">Central de Demandas</h2><p>Sugestões aprovadas ficam visíveis para todos. Somente pessoas logadas com e-mail acadêmico confirmado podem sugerir, apoiar, discordar, responder ou denunciar.</p></div><button class="student-button" id="v29suggest">Enviar sugestão</button></div><details class="v29rules"><summary>Regras e orientações de uso</summary><div class="v29rules-content"><p>Use a Central para sugestões de melhoria acadêmica. Comente sobre as propostas com respeito, evite mensagens repetidas e não compartilhe dados pessoais de terceiros.</p><p>Publicações e respostas passam por moderação. Para situações individuais ou que exijam sigilo, procure a <a href="#ouvidoria">Ouvidoria</a>. Apoios e discordâncias não são uma votação oficial.</p></div></details><div class="v29tools"><label>Categoria <select id="v29cat"><option value="">Todas</option>${Object.keys(CAT).map(function(k){return'<option value="'+k+'">'+CAT[k]+'</option>'}).join('')}</select></label><label>Ordenar <select id="v29sort"><option value="recentes">Mais recentes</option><option value="apoios">Mais apoiadas</option><option value="respostas">Mais debatidas</option></select></label></div><p id="v29pubstatus" class="v29status"></p><div id="v29feed" class="v29feed"></div></div>`;
 var now=home.querySelector('.now-strip');now?home.insertBefore(sec,now):home.appendChild(sec);
 var ou=document.querySelector('#sobre-portal a[href="#ouvidoria"]');if(ou&&ou.parentNode&&!document.querySelector('#sobre-portal a[href="#central-demandas"]')){var a=document.createElement('a');a.className='hub-card';a.href='#central-demandas';a.innerHTML='<h3>Central de Demandas</h3><p>Sugira melhorias e participe com apoios, discordâncias e respostas.</p><span class="go">Participar →</span>';ou.parentNode.appendChild(a)}
 document.getElementById('v29suggest').onclick=function(){openStudent('demandas')};document.getElementById('v29cat').onchange=render;document.getElementById('v29sort').onchange=render
@@ -159,7 +233,7 @@ function loadFeed(){var st=document.getElementById('v29pubstatus');tell(st,'Carr
    contas. Defesa em profundidade — igual ao padrão já adotado no resto
    do portal — mesmo que o banco também precise bloquear isso. */
 function loadVotes(){votes={};if(!state.authenticated)return Promise.resolve();return auth().then(function(c){return c.auth.getUser().then(function(r){var u=r.data&&r.data.user;if(!u)return{data:[]};return c.from('caef_demandas_votos').select('demanda_id,voto').eq('autor_id',u.id)})}).then(function(r){if(r.error)throw r.error;(r.data||[]).forEach(function(v){votes[v.demanda_id]=v.voto})}).catch(function(){})}
-function render(){var w=document.getElementById('v29feed');if(!w)return;var cat=document.getElementById('v29cat').value,sort=document.getElementById('v29sort').value,rows=feed.filter(function(d){return!cat||d.categoria===cat}).slice();if(sort==='apoios')rows.sort(function(a,b){return Number(b.apoios)-Number(a.apoios)});if(sort==='respostas')rows.sort(function(a,b){return Number(b.respostas)-Number(a.respostas)});if(!rows.length){w.innerHTML='<div class="v29empty">Nenhuma sugestão publicada neste filtro.</div>';return}w.innerHTML=rows.map(function(d){var cs=comments[d.id]||[],v=votes[d.id]||0;return`<article class="v29card" data-id="${esc(d.id)}"><div class="v29top"><div class="v29who"><span class="v29ava" data-avatar="${esc(d.foto_publica_path||'')}" data-name="${esc(d.nome_exibicao)}">${esc(initials(d.nome_exibicao))}</span><div><b>${esc(d.nome_exibicao)}</b><div class="v29meta">${esc(date(d.criado_em))}</div></div></div><div class="v29badges"><span class="v29badge">${esc(CAT[d.categoria]||d.categoria)}</span><span class="v29badge">${esc(SIT[d.situacao]||d.situacao)}</span></div></div><h3>${esc(d.titulo)}</h3><p class="v29desc">${esc(d.descricao)}</p>${d.resposta_gestao?'<div class="v29resp"><b>Resposta da gestão</b><br>'+esc(d.resposta_gestao)+'</div>':''}<div class="v29actions"><button class="v29btn ${v===1?'on':''}" data-v="1" data-count="${Number(d.apoios||0)}">Apoiar ${Number(d.apoios||0)}</button><button class="v29btn neg ${v===-1?'on':''}" data-v="-1" data-count="${Number(d.discordancias||0)}">Discordar ${Number(d.discordancias||0)}</button><button class="v29btn" data-c>Respostas (${Number(d.respostas||0)})</button><button class="v29btn" data-report>Denunciar</button></div><p class="v29meta" data-vstatus></p><div class="v29comments" hidden>${cs.map(function(c){return'<div class="v29comment" data-comment="'+esc(c.id)+'"><div class="v29who"><span class="v29ava" data-avatar="'+esc(c.foto_publica_path||'')+'" data-name="'+esc(c.nome_exibicao)+'">'+esc(initials(c.nome_exibicao))+'</span><div><b>'+esc(c.nome_exibicao)+'</b><span class="v29meta"> · '+esc(date(c.criado_em))+'</span></div></div><p>'+esc(c.mensagem)+'</p><button type="button" class="v29btn" data-report-comment>Denunciar resposta</button>'+reportForm()+'</div>'}).join('')}${state.authenticated?'<form class="v29form v29reply"><textarea minlength="2" maxlength="1500" required placeholder="Escreva uma resposta"></textarea><div class="v29ident"><label><input type="checkbox" name="showName"> Mostrar meu nome</label><label><input type="checkbox" name="showPhoto" '+(profile&&profile.avatar_path?'':'disabled')+'> Mostrar minha foto</label></div><button class="student-button student-secondary">Enviar resposta</button><p class="v29status"></p></form>':'<p class="v29meta">Entre para responder.</p>'}</div>${reportForm()}</article>`}).join('');Array.prototype.forEach.call(w.querySelectorAll('.v29card'),wire);hydrateAvatars(w)}
+function render(){var w=document.getElementById('v29feed');if(!w)return;var cat=document.getElementById('v29cat').value,sort=document.getElementById('v29sort').value,rows=feed.filter(function(d){return!cat||d.categoria===cat}).slice();if(sort==='apoios')rows.sort(function(a,b){return Number(b.apoios)-Number(a.apoios)});if(sort==='respostas')rows.sort(function(a,b){return Number(b.respostas)-Number(a.respostas)});if(!rows.length){w.innerHTML='<div class="v29empty">Nenhuma sugestão publicada neste filtro.</div>';return}w.innerHTML=rows.map(function(d){var cs=comments[d.id]||[],v=votes[d.id]||0,needExpand=String(d.descricao||'').length>210||String(d.descricao||'').split('\n').length>4;return`<article class="v29card ${needExpand?'v29collapsed':''}" data-id="${esc(d.id)}"><div class="v29top"><div class="v29who"><span class="v29ava" data-avatar="${esc(d.foto_publica_path||'')}" data-name="${esc(d.nome_exibicao)}">${esc(initials(d.nome_exibicao))}</span><div><b>${esc(d.nome_exibicao)}</b><div class="v29meta">${esc(date(d.criado_em))}</div></div></div><div class="v29badges"><span class="v29badge">${esc(CAT[d.categoria]||d.categoria)}</span><span class="v29badge">${esc(SIT[d.situacao]||d.situacao)}</span></div></div><h3>${esc(d.titulo)}</h3><p class="v29desc">${esc(d.descricao)}</p>${needExpand?'<button type="button" class="v29expand" data-expand aria-expanded="false" aria-label="Ler a descrição completa de '+esc(d.titulo)+'">Ler mais ↓</button>':''}${d.resposta_gestao?'<div class="v29resp"><b>Resposta da gestão</b><br>'+esc(d.resposta_gestao)+'</div>':''}<div class="v29actions"><button class="v29btn ${v===1?'on':''}" data-v="1" data-count="${Number(d.apoios||0)}">Apoiar ${Number(d.apoios||0)}</button><button class="v29btn neg ${v===-1?'on':''}" data-v="-1" data-count="${Number(d.discordancias||0)}">Discordar ${Number(d.discordancias||0)}</button><button class="v29btn" data-c>Respostas (${Number(d.respostas||0)})</button><button class="v29btn" data-report>Denunciar</button></div><p class="v29meta" data-vstatus></p><div class="v29comments" hidden>${cs.map(function(c){return'<div class="v29comment" data-comment="'+esc(c.id)+'"><div class="v29who"><span class="v29ava" data-avatar="'+esc(c.foto_publica_path||'')+'" data-name="'+esc(c.nome_exibicao)+'">'+esc(initials(c.nome_exibicao))+'</span><div><b>'+esc(c.nome_exibicao)+'</b><span class="v29meta"> · '+esc(date(c.criado_em))+'</span></div></div><p>'+esc(c.mensagem)+'</p><button type="button" class="v29btn" data-report-comment>Denunciar resposta</button>'+reportForm()+'</div>'}).join('')}${state.authenticated?'<form class="v29form v29reply"><textarea minlength="2" maxlength="1500" required placeholder="Escreva uma resposta"></textarea><div class="v29ident"><label><input type="checkbox" name="showName"> Mostrar meu nome</label><label><input type="checkbox" name="showPhoto" '+(profile&&profile.avatar_path?'':'disabled')+'> Mostrar minha foto</label></div><button class="student-button student-secondary">Enviar resposta</button><p class="v29status"></p></form>':'<p class="v29meta">Entre para responder.</p>'}</div>${reportForm()}</article>`}).join('');Array.prototype.forEach.call(w.querySelectorAll('.v29card'),wire);hydrateAvatars(w)}
 function reportForm(){return '<form class="v29report v29form" hidden><label>Motivo da denúncia<textarea required minlength="8" maxlength="500" placeholder="Explique por que este conteúdo precisa ser revisado pela gestão. Não inclua dados pessoais."></textarea></label><p class="v29meta">Sua denúncia será recebida somente pela gestão e não aparecerá publicamente.</p><button class="student-button student-secondary" type="submit">Enviar denúncia</button><p class="v29status" role="status" aria-live="polite"></p></form>'}
 function hydrateAvatars(root){
   Array.prototype.forEach.call(root.querySelectorAll('.v29ava[data-avatar]'),function(el){
@@ -193,7 +267,7 @@ function submitReport(form,demandId,commentId){
   .catch(function(e){tell(st,e.message||'Não foi possível enviar.',true)})
   .finally(function(){btn.disabled=false});
 }
-function wire(card){card.querySelector('[data-c]').onclick=function(){var x=card.querySelector('.v29comments');x.hidden=!x.hidden};var demandForm=card.querySelector(':scope > .v29report');card.querySelector('[data-report]').onclick=function(){toggleReport(this,demandForm)};demandForm.onsubmit=function(e){e.preventDefault();submitReport(demandForm,card.dataset.id,null)};Array.prototype.forEach.call(card.querySelectorAll('.v29comment'),function(row){var btn=row.querySelector('[data-report-comment]'),form=row.querySelector('.v29report');btn.onclick=function(){toggleReport(btn,form)};form.onsubmit=function(e){e.preventDefault();submitReport(form,card.dataset.id,row.dataset.comment)}});Array.prototype.forEach.call(card.querySelectorAll('[data-v]'),function(b){b.onclick=function(){vote(card,Number(b.dataset.v))}});var f=card.querySelector('.v29reply');if(f)f.onsubmit=function(e){e.preventDefault();submitReply(card.dataset.id,f)}}
+function wire(card){var expand=card.querySelector('[data-expand]');if(expand)expand.onclick=function(){var collapsed=card.classList.toggle('v29collapsed');expand.textContent=collapsed?'Ler mais ↓':'Mostrar menos ↑';expand.setAttribute('aria-expanded',String(!collapsed))};card.querySelector('[data-c]').onclick=function(){var x=card.querySelector('.v29comments');x.hidden=!x.hidden};var demandForm=card.querySelector(':scope > .v29report');card.querySelector('[data-report]').onclick=function(){toggleReport(this,demandForm)};demandForm.onsubmit=function(e){e.preventDefault();submitReport(demandForm,card.dataset.id,null)};Array.prototype.forEach.call(card.querySelectorAll('.v29comment'),function(row){var btn=row.querySelector('[data-report-comment]'),form=row.querySelector('.v29report');btn.onclick=function(){toggleReport(btn,form)};form.onsubmit=function(e){e.preventDefault();submitReport(form,card.dataset.id,row.dataset.comment)}});Array.prototype.forEach.call(card.querySelectorAll('[data-v]'),function(b){b.onclick=function(){vote(card,Number(b.dataset.v))}});var f=card.querySelector('.v29reply');if(f)f.onsubmit=function(e){e.preventDefault();submitReply(card.dataset.id,f)}}
 /* CORREÇÃO: antes recarregava a lista inteira (2 consultas) a cada voto —
    além de desperdiçar chamadas, isso recolhia qualquer thread de
    respostas que estivesse aberta em QUALQUER card da tela, não só no
@@ -239,6 +313,95 @@ function savePrivacy(row){var st=row.querySelector('.v29status');tell(st,'Salvan
 function loadJourney(){var w=document.getElementById('v29journey');if(!w||!state.authenticated)return;w.innerHTML='<p class="v29status">Carregando…</p>';Promise.all([refreshProfile(),auth().then(function(c){return c.auth.getUser().then(function(r){return c.from('caef_percurso_etapas').select('etapa,concluida').eq('autor_id',r.data.user.id)})})]).then(function(a){var r=a[1];if(r.error)throw r.error;var d={};(r.data||[]).forEach(function(x){d[x.etapa]=x.concluida});var count=STEPS.filter(function(x){return d[x[0]]}).length,grade=profile&&profile.habilitacao==='bacharelado'?'#bacharelado':profile&&profile.habilitacao==='licenciatura'?'#licenciatura':'#comparativo';w.innerHTML='<h4>Meu percurso acadêmico</h4><p class="student-note">Checklist pessoal e autodeclarado. Não consulta o SIGAA e não substitui a matriz oficial.</p><p class="v29status">'+count+' de '+STEPS.length+' etapas marcadas</p>'+STEPS.map(function(x){var href=x[0]==='consultar_grade'?grade:x[2];return'<div class="v29step"><input type="checkbox" data-step="'+x[0]+'" '+(d[x[0]]?'checked':'')+'><div><h5>'+esc(x[1])+'</h5><p>Use esta etapa como referência pessoal de organização.</p></div><a href="'+href+'">Abrir →</a></div>'}).join('')+'<p id="v29jstatus" class="v29status"></p>';Array.prototype.forEach.call(w.querySelectorAll('[data-step]'),function(cb){cb.onchange=saveStep})}).catch(function(){w.innerHTML='<p class="v29err">Não foi possível carregar o percurso.</p>'})}
 function saveStep(e){var cb=e.target,st=document.getElementById('v29jstatus');tell(st,'Salvando…');auth().then(function(c){return c.auth.getUser().then(function(r){return c.from('caef_percurso_etapas').upsert({autor_id:r.data.user.id,etapa:cb.dataset.step,concluida:cb.checked,atualizado_em:new Date().toISOString()},{onConflict:'autor_id,etapa'})})}).then(function(r){if(r.error)throw r.error;loadJourney()}).catch(function(){cb.checked=!cb.checked;tell(st,'Falha ao salvar.',true)})}
 
+
+/* V29.2 — Editor de avatar local (sem bibliotecas externas).
+   Mantém o caminho único do avatar no Storage, exigido pelas regras RLS.
+   A alteração da foto só é enviada ao servidor depois da confirmação. */
+var cropState={image:null,url:null,x:0,y:0,zoom:100},cropBusy=false,cropLastFocus=null,cropSequence=0;
+function installAvatarCropper(){
+  var profilePanel=document.getElementById('studentPanelPerfil'),photoActions=profilePanel&&profilePanel.querySelector('.student-photo-actions');
+  var originalInput=document.getElementById('studentAvatarInput');
+  if(!photoActions||!originalInput||document.getElementById('v29editPhoto'))return;
+  var edit=document.createElement('button');edit.id='v29editPhoto';edit.type='button';edit.className='student-button student-secondary';edit.textContent='Ajustar foto';photoActions.appendChild(edit);
+  var note=profilePanel.querySelector('.student-photo-block + .student-note');
+  if(note)note.textContent='Sua foto é privada por padrão. Ela só aparece na Central de Demandas quando você escolher mostrar a foto na publicação. Aceitamos JPEG, PNG e WEBP; a foto ajustada é salva com até 2 MB.';
+  var layer=document.createElement('div');layer.id='v29CropLayer';layer.className='v29crop-overlay';layer.hidden=true;
+  layer.innerHTML='<div class="v29crop-dialog" role="dialog" aria-modal="true" aria-labelledby="v29cropTitle"><div class="v29crop-head"><h3 id="v29cropTitle">Ajustar foto de perfil</h3><button type="button" class="v29crop-close" id="v29cropClose" aria-label="Fechar editor">×</button></div><p class="v29crop-help">Arraste a imagem para centralizar o rosto. Ajuste o zoom, se necessário. O círculo mostra como a foto aparecerá no portal.</p><canvas id="v29cropCanvas" class="v29crop-canvas" width="512" height="512" role="img" aria-label="Prévia circular do enquadramento da foto"></canvas><div class="v29crop-controls"><label>Zoom<input type="range" id="v29cropZoom" min="100" max="300" step="5" value="100"></label><label>Horizontal<input type="range" id="v29cropX" min="-100" max="100" value="0"></label><label>Vertical<input type="range" id="v29cropY" min="-100" max="100" value="0"></label></div><label class="v29crop-file" for="v29cropChoose">Trocar imagem (JPEG, PNG ou WEBP)<input type="file" id="v29cropChoose" accept="image/jpeg,image/png,image/webp"></label><div class="v29crop-actions"><button type="button" class="student-button student-secondary" id="v29cropCancel">Cancelar</button><button type="button" class="student-button" id="v29cropSave" disabled>Salvar enquadramento</button></div><p id="v29cropStatus" class="v29status" role="status" aria-live="polite"></p></div>';
+  document.body.appendChild(layer);
+  var canvas=document.getElementById('v29cropCanvas'),zoom=document.getElementById('v29cropZoom'),xs=document.getElementById('v29cropX'),ys=document.getElementById('v29cropY'),status=document.getElementById('v29cropStatus'),save=document.getElementById('v29cropSave');
+  function renderCrop(){
+    var img=cropState.image;if(!img)return;
+    var side=canvas.width,scale=Math.max(side/img.naturalWidth,side/img.naturalHeight)*cropState.zoom/100;
+    var w=img.naturalWidth*scale,h=img.naturalHeight*scale;
+    var x=(side-w)/2+(cropState.x/100)*Math.max(0,w-side)/2;
+    var y=(side-h)/2+(cropState.y/100)*Math.max(0,h-side)/2;
+    var ctx=canvas.getContext('2d',{alpha:false});ctx.clearRect(0,0,side,side);ctx.fillStyle='#f2f5ef';ctx.fillRect(0,0,side,side);ctx.drawImage(img,x,y,w,h);
+    return {w:w,h:h};
+  }
+  function readSliders(){cropState.zoom=Number(zoom.value);cropState.x=Number(xs.value);cropState.y=Number(ys.value);renderCrop()}
+  [zoom,xs,ys].forEach(function(s){s.addEventListener('input',readSliders)});
+  function closeCrop(){if(cropBusy)return;layer.hidden=true;save.disabled=true;cropState.image=null;if(cropState.url)URL.revokeObjectURL(cropState.url);cropState.url=null;if(cropLastFocus&&cropLastFocus.isConnected)cropLastFocus.focus()}
+  document.getElementById('v29cropClose').onclick=closeCrop;document.getElementById('v29cropCancel').onclick=closeCrop;
+  layer.addEventListener('click',function(e){if(e.target===layer)closeCrop()});
+  document.addEventListener('keydown',function(e){if(layer.hidden)return;if(e.key==='Escape'){e.preventDefault();closeCrop()}else if(e.key==='Tab'){
+    var focusables=Array.prototype.filter.call(layer.querySelectorAll('button:not(:disabled),input:not(:disabled)'),function(x){return x.offsetParent!==null});
+    if(!focusables.length)return;var first=focusables[0],last=focusables[focusables.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+  }});
+  function loadCropFile(blob){
+    var seq=++cropSequence;
+    if(!blob||!(/^(image\/(jpeg|png|webp)|application\/octet-stream)?$/.test(blob.type))||blob.size>10*1024*1024){tell(status,'Selecione JPEG, PNG ou WEBP de até 10 MB para recortar.',true);return}
+    tell(status,'Abrindo imagem…');save.disabled=true;
+    var url=URL.createObjectURL(blob),img=new Image();
+    img.onload=function(){
+      if(seq!==cropSequence){URL.revokeObjectURL(url);return}
+      if(img.naturalWidth*img.naturalHeight>32000000||!img.naturalWidth||!img.naturalHeight){URL.revokeObjectURL(url);tell(status,'Imagem grande demais para edição neste aparelho.',true);return}
+      if(cropState.url)URL.revokeObjectURL(cropState.url);
+      cropState.url=url;cropState.image=img;cropState.zoom=100;cropState.x=0;cropState.y=0;
+      zoom.value='100';xs.value='0';ys.value='0';renderCrop();save.disabled=false;tell(status,'Arraste a foto ou use os controles para ajustar o enquadramento.');
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);tell(status,'Não foi possível abrir essa imagem.',true)};
+    img.src=url;
+  }
+  function openCrop(file){
+    if(!state.authenticated){openStudent('demandas');return}
+    cropLastFocus=document.activeElement;layer.hidden=false;tell(status,'');
+    document.getElementById('v29cropClose').focus();
+    if(file){loadCropFile(file);return}
+    save.disabled=true;tell(status,'Carregando sua foto atual…');
+    refreshProfile().then(function(){
+      if(!profile||!profile.avatar_path){tell(status,'Escolha uma imagem para ajustar.');return}
+      return auth().then(function(c){return c.storage.from('avatares-caef').download(profile.avatar_path)}).then(function(r){if(r.error)throw r.error;loadCropFile(r.data)});
+    }).catch(function(){tell(status,'Não foi possível carregar a foto atual. Selecione o arquivo original para ajustar.',true)});
+  }
+  edit.onclick=function(){openCrop(null)};
+  /* Captura antes do listener antigo: uma foto nova agora passa primeiro pelo editor. */
+  originalInput.addEventListener('change',function(e){if(!this.files||!this.files.length)return;e.stopImmediatePropagation();var file=this.files[0];this.value='';openCrop(file)},true);
+  document.getElementById('v29cropChoose').addEventListener('change',function(){if(this.files&&this.files.length)loadCropFile(this.files[0]);this.value=''});
+  var drag=null;
+  canvas.addEventListener('pointerdown',function(e){if(!cropState.image||cropBusy)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,startX:cropState.x,startY:cropState.y};if(canvas.setPointerCapture)canvas.setPointerCapture(e.pointerId)});
+  canvas.addEventListener('pointermove',function(e){if(!drag||drag.id!==e.pointerId)return;var over=renderCrop();if(!over)return;var side=canvas.getBoundingClientRect().width;if(!side)return;
+    if(over.w>canvas.width+1){cropState.x=Math.max(-100,Math.min(100,drag.startX+(e.clientX-drag.x)*canvas.width/side*200/(over.w-canvas.width)));xs.value=String(Math.round(cropState.x))}
+    if(over.h>canvas.height+1){cropState.y=Math.max(-100,Math.min(100,drag.startY+(e.clientY-drag.y)*canvas.height/side*200/(over.h-canvas.height)));ys.value=String(Math.round(cropState.y))}
+    renderCrop();
+  });
+  ['pointerup','pointercancel','lostpointercapture'].forEach(function(type){canvas.addEventListener(type,function(){drag=null})});
+  save.onclick=function(){
+    if(!cropState.image||cropBusy)return;cropBusy=true;save.disabled=true;tell(status,'Salvando o enquadramento…');renderCrop();
+    canvas.toBlob(function(blob){
+      if(!blob||blob.size>2*1024*1024){cropBusy=false;save.disabled=false;tell(status,'Não foi possível gerar a foto. Tente outra imagem.',true);return}
+      auth().then(function(c){return c.auth.getUser().then(function(r){
+        var u=r.data&&r.data.user;if(!u)throw new Error('Entre novamente para salvar sua foto.');
+        var path=u.id+'/avatar';return c.storage.from('avatares-caef').upload(path,blob,{upsert:true,contentType:blob.type,cacheControl:'0'}).then(function(upload){
+          if(upload.error)throw upload.error;
+          return c.from('student_profiles').upsert({id:u.id,avatar_path:path},{onConflict:'id'}).select('avatar_path').maybeSingle();
+        }).then(function(result){if(result.error)throw result.error;avatarCache.delete(path)})
+      })}).then(function(){tell(status,'Foto salva! Atualizando os avatares…');window.setTimeout(function(){window.location.reload()},350)})
+      .catch(function(err){cropBusy=false;save.disabled=false;tell(status,err&&err.message?err.message:'Não foi possível salvar. Tente novamente.',true)});
+    },'image/webp',0.88);
+  };
+}
+
 var eventoRealRecebido=false;
 function account(d){state=d||{authenticated:false,isAdmin:false};if(!state.authenticated){user=null;profile=null;votes={};render();return}refreshProfile().then(function(){loadVotes().then(render)})}
 document.addEventListener('caef:accountstate',function(e){eventoRealRecebido=true;account(e.detail)});
@@ -253,6 +416,6 @@ document.addEventListener('caef:accountstate',function(e){eventoRealRecebido=tru
    última tentativa, e apenas se o evento oficial nunca chegou — nunca
    sobrepõe um estado que a área do estudante já determinou. */
 function bootAccount(){if(eventoRealRecebido||!window.caefStudentClient)return;window.caefStudentClient.auth.getSession().then(function(r){if(eventoRealRecebido)return;var u=r.data&&r.data.session&&r.data.session.user;var on=!!(u&&u.email_confirmed_at&&/@academico\.ufpb\.br$/i.test(u.email||'')&&document.getElementById('studentLogged')&&!document.getElementById('studentLogged').hidden);if(!on)return account({authenticated:false,isAdmin:false});var p=window.caefContentSource&&window.caefContentSource.admin?window.caefContentSource.admin.checarIsAdmin():Promise.resolve(false);p.then(function(a){if(!eventoRealRecebido)account({authenticated:true,isAdmin:!!a})})})}
-function init(){styles();publicUI();studentUI();loadFeed();setTimeout(bootAccount,1500)}
+function init(){styles();publicUI();studentUI();installAvatarCropper();loadFeed();setTimeout(bootAccount,1500)}
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();
 })();
