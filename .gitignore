@@ -1,1 +1,6 @@
 netlify-public/
+.env
+.env.*
+!.env.example
+supabase/.temp/
+supabase/.env
