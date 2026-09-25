@@ -1,0 +1,1 @@
+drop function if exists public.caef_demanda_alterar_identidade(uuid,boolean,text,boolean);
