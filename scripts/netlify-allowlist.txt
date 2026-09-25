@@ -1,0 +1,45 @@
+# Allowlist de publicação do Portal CAEF (Netlify).
+# Um caminho exato por linha, relativo à raiz do repositório. Linhas vazias e
+# linhas iniciadas por # são ignoradas. Nada fora desta lista é publicado.
+# Para publicar um arquivo novo, adicione-o aqui (a mudança passa por revisão).
+
+index.html
+css/style.css
+
+js/area-estudante-config.js
+js/content-config.js
+js/supabase-content.js
+js/main.js
+js/area-estudante.js
+js/account-widget.js
+js/admin-panel.js
+js/v29-participacao.js
+js/v29-admin-demandas.js
+js/apadrinhamento-acompanhamento.js
+
+js/data/oportunidades.js
+js/data/laboratorios.js
+js/data/formacao.js
+js/data/gestao.js
+js/data/avisos.js
+js/data/portas-abertas.js
+js/data/acervo.js
+js/data/apadrinhamento.js
+js/data/ouvidoria.js
+js/data/busca-secoes.js
+
+assets/img/favicon.png
+assets/img/logo-caef.png
+assets/img/logo-caef-sm.png
+assets/img/logo-sinergia.png
+assets/img/og-image.png
+assets/img/gestao/allan-rodriguez.jpg
+assets/img/gestao/aryuska-souza.jpg
+assets/img/gestao/dheizfy-pereira.jpg
+assets/img/gestao/evely-kaline.jpg
+assets/img/gestao/joao-felipe.jpg
+assets/img/gestao/kaique-santos.jpg
+assets/img/gestao/luiz-felipe.jpg
+assets/img/gestao/maxuell-lopes.jpg
+assets/img/gestao/raphael-sousa.jpg
+assets/img/gestao/ygor-kalenieves.jpg
